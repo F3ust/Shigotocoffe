@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# MongoDB data (Docker volume handles this)
+data/
+
+# Coverage
+coverage/
+
+# Temp
+*.tmp
+*.temp
+
+# AI agent config
+.agents/
+
+# Design artifacts (spec doc, extracted images, parser script)
+*.xlsx
+spec_images/
+spec_output.txt
+read_spec.py

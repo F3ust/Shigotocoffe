@@ -1,0 +1,54 @@
+{
+  "app_name": "仕事コーヒー",
+  "app_tagline": "Sáng tạo và kết nối",
+  "nav": {
+    "home": "Trang chủ",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "info": "Thông tin",
+    "logout": "Đăng xuất",
+    "language": "Ngôn ngữ"
+  },
+  "hero": {
+    "title": "TÌM KIẾM QUÁN CÀ PHÊ\nLÀM VIỆC TẠI HÀ NỘI"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm quán...",
+    "button": "Tìm kiếm",
+    "district_placeholder": "Chọn khu vực",
+    "district_all": "Tất cả khu vực"
+  },
+  "filter": {
+    "title": "Lọc",
+    "distance": "Khoảng cách",
+    "distance_1km": "Dưới 1km",
+    "distance_1_3km": "1 - 3km",
+    "distance_3_5km": "3 - 5km",
+    "distance_5km": "Trên 5km",
+    "rating": "Đánh giá",
+    "rating_3": "3 sao trở lên",
+    "rating_4": "4 sao trở lên",
+    "wifi": "Wi-Fi mạnh",
+    "outlets": "Nhiều ổ cắm",
+    "quiet": "Yên tĩnh",
+    "noTimeLimit": "Không giới hạn thời gian",
+    "japanese": "Đồ Nhật",
+    "apply": "Áp dụng",
+    "clear": "Hủy bỏ"
+  },
+  "cafe": {
+    "featured": "Quán nổi bật",
+    "view": "Xem",
+    "reviews": "đánh giá",
+    "open": "Đang mở cửa",
+    "closed": "Đã đóng cửa",
+    "hours": "Giờ mở cửa",
+    "no_results": "Không tìm thấy quán nào",
+    "loading": "Đang tải..."
+  },
+  "footer": {
+    "copyright": "© 2026 仕事コーヒー. Tìm quán cafe để làm việc tại Hà Nội.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
+  }
+}

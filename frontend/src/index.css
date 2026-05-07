@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  /* Sage green palette — matches spec design */
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e8efe8;
+  --color-sage-200: #c8d8c8;
+  --color-sage-300: #a3bfa3;
+  --color-sage-400: #7da57d;
+  --color-sage-500: #5a8a5a;
+  --color-sage-600: #4a7c59;
+  --color-sage-700: #3d6548;
+  --color-sage-800: #335438;
+  --color-sage-900: #2b4530;
+
+  /* Warm cream/coffee background palette */
+  --color-cream-50: #fefcf8;
+  --color-cream-100: #fdf8f0;
+  --color-cream-200: #f5f0e8;
+  --color-cream-300: #ede5d8;
+  --color-cream-400: #ddd2c0;
+  --color-cream-500: #c4b59a;
+
+  /* Keep coffee for accents */
+  --color-coffee-50: #fdf8f0;
+  --color-coffee-100: #fff8e1;
+  --color-coffee-200: #ffe082;
+  --color-coffee-300: #ffb300;
+  --color-coffee-400: #ff8f00;
+  --color-coffee-500: #5d4037;
+  --color-coffee-600: #4e342e;
+  --color-coffee-700: #3e2723;
+  --color-coffee-800: #2c1810;
+  --color-coffee-900: #1a0e0a;
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-cream-100 text-gray-800 font-sans antialiased;
+    min-height: 100vh;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+}
