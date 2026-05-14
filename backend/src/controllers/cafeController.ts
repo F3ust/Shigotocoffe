@@ -324,3 +324,19 @@ export async function updateCafe(req: Request, res: Response): Promise<void> {
 
   res.json({ status: "success", data: cafe });
 }
+
+export async function deleteCafe(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id)) {
+    throw new ValidationError("Invalid cafe id");
+  }
+
+  const cafe = await Cafe.findByIdAndDelete(id);
+
+  if (!cafe) {
+    throw new NotFoundError(`Cafe not found: ${id}`);
+  }
+
+  res.status(204).send();
+}
