@@ -41,7 +41,7 @@ fi
 # ── TC-03-02: POST missing name.vi → 400 ──
 echo ""
 echo "── TC-03-02: POST missing name.vi"
-BAD_BODY=$(jq '. | .name = {"ja": "テスト"} ' "${FIXTURE}")
+BAD_BODY=$(jq '. | .name = {"ja": "Test"} ' "${FIXTURE}")
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
   -H "Content-Type: application/json" \

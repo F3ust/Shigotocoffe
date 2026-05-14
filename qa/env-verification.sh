@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# env-verification.sh — Shigoto Coffee ローカル環境検証スクリプト
-# Kiểm tra môi trường phát triển cục bộ cho dự án 仕事コーヒー
+# env-verification.sh — Shigoto Coffee local environment verification
 #
 # Usage: bash qa/env-verification.sh
 # Exit code: 0 = all hard checks passed, 1 = one or more hard checks failed
@@ -28,8 +27,8 @@ hfail() { FAIL_COUNT=$((FAIL_COUNT+1)); HARD_FAIL=$((HARD_FAIL+1)); echo -e "  $
 # ── Header ───────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║   仕事コーヒー — Environment Verification Script             ║${NC}"
-echo -e "${CYAN}║   Kiểm tra môi trường phát triển cục bộ                      ║${NC}"
+echo -e "${CYAN}║   Shigoto Coffee — Environment Verification Script            ║${NC}"
+echo -e "${CYAN}║   Local development environment checks                        ║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
 echo "  Date    : $(date '+%Y-%m-%d %H:%M:%S')"
 echo "  Host    : $(hostname)"

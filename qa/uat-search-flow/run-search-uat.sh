@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
 # run-search-uat.sh — UAT Search Flow Test Runner
-# Sprint 1 · Task ID 14 · QA Tester B (Quốc Khánh)
+# Sprint 1 · Task ID 14 · QA Tester B (Quoc Khanh)
 #
 # Coverage: UAT-S-01 through UAT-S-11 (API-testable scenarios)
 # UAT-S-12 (UI click → detail page) is skipped; UI-only / known limitation.
@@ -27,8 +27,8 @@ source "$SCRIPT_DIR/lib/extra-assert.sh"
 
 # ── Banner ──────────────────────────────────────────────────
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║   仕事コーヒー — UAT Search Flow Test Runner         ║"
-echo "║   Sprint 1 · Task ID 14 · QA Tester B (Quốc Khánh)  ║"
+echo "║   Shigoto Coffee — UAT Search Flow Test Runner       ║"
+echo "║   Sprint 1 · Task ID 14 · QA Tester B (Quoc Khanh)  ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo "  API base: $BASE_URL"
 echo ""
@@ -55,22 +55,22 @@ assert_json_array_length "$BODY" '.data' "12" "[UAT-S-01] 12 cafes returned (ful
 assert_json_field "$BODY" '.pagination.total' '"12"' "[UAT-S-01] pagination.total = 12"
 echo ""
 
-# ── UAT-S-02: JP keyword search "コーヒー" ──────────────────
-echo "── UAT-S-02: JP keyword search 'コーヒー'"
+# ── UAT-S-02: Japanese keyword search ───────────────────────
+echo "── UAT-S-02: Japanese keyword search"
 do_get "/cafes?q=$(python3 -c 'import urllib.parse; print(urllib.parse.quote("コーヒー"))' 2>/dev/null || echo '%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC')"
-assert_status_code 200 "$HTTP_STATUS" "[UAT-S-02] GET /cafes?q=コーヒー → HTTP 200"
+assert_status_code 200 "$HTTP_STATUS" "[UAT-S-02] Japanese keyword search returns HTTP 200"
 assert_json_field "$BODY" '.status' '"success"' "[UAT-S-02] response.status = success"
 assert_json_array_not_empty "$BODY" '.data' "[UAT-S-02] At least 1 match found"
-assert_text_match_any "$BODY" '.data' "コーヒー" "[UAT-S-02] All results contain 'コーヒー' in a text field"
+assert_text_match_any "$BODY" '.data' "コーヒー" "[UAT-S-02] All results contain the Japanese keyword in a text field"
 echo ""
 
-# ── UAT-S-03: VI keyword search "yên tĩnh" ──────────────────
-echo "── UAT-S-03: VI keyword search 'yên tĩnh'"
+# ── UAT-S-03: Vietnamese keyword search ─────────────────────
+echo "── UAT-S-03: Vietnamese keyword search"
 do_get "/cafes?q=y%C3%AAn+t%C4%A9nh"
-assert_status_code 200 "$HTTP_STATUS" "[UAT-S-03] GET /cafes?q=yên+tĩnh → HTTP 200"
+assert_status_code 200 "$HTTP_STATUS" "[UAT-S-03] Vietnamese keyword search returns HTTP 200"
 assert_json_field "$BODY" '.status' '"success"' "[UAT-S-03] response.status = success"
 assert_json_array_not_empty "$BODY" '.data' "[UAT-S-03] At least 1 match found"
-assert_text_match_any "$BODY" '.data' "yên tĩnh" "[UAT-S-03] All results contain 'yên tĩnh' in a text field"
+assert_text_match_any "$BODY" '.data' "yên tĩnh" "[UAT-S-03] All results contain the Vietnamese keyword in a text field"
 echo ""
 
 # ── UAT-S-04: No-match keyword → empty state ────────────────
@@ -82,14 +82,14 @@ assert_json_array_length "$BODY" '.data' "0" "[UAT-S-04] data array is empty"
 assert_json_field "$BODY" '.pagination.total' '"0"' "[UAT-S-04] pagination.total = 0"
 echo ""
 
-# ── UAT-S-05: District filter "Ba Đình" ─────────────────────
-echo "── UAT-S-05: District filter 'Ba Đình'"
+# ── UAT-S-05: District filter ───────────────────────────────
+echo "── UAT-S-05: District filter"
 do_get "/cafes?district=Ba+%C4%90%C3%ACnh"
-assert_status_code 200 "$HTTP_STATUS" "[UAT-S-05] GET /cafes?district=Ba+Đình → HTTP 200"
+assert_status_code 200 "$HTTP_STATUS" "[UAT-S-05] District filter returns HTTP 200"
 assert_json_field "$BODY" '.status' '"success"' "[UAT-S-05] response.status = success"
-assert_json_array_not_empty "$BODY" '.data' "[UAT-S-05] At least 1 result in Ba Đình"
-assert_json_array_length "$BODY" '.data' "4" "[UAT-S-05] Exactly 4 cafes in Ba Đình"
-assert_all_field_equal "$BODY" '.data' '.district' 'Ba Đình' "[UAT-S-05] All results have district='Ba Đình'"
+assert_json_array_not_empty "$BODY" '.data' "[UAT-S-05] At least 1 result in the requested district"
+assert_json_array_length "$BODY" '.data' "4" "[UAT-S-05] Exactly 4 cafes in the requested district"
+assert_all_field_equal "$BODY" '.data' '.district' 'Ba Đình' "[UAT-S-05] All results match the requested district"
 echo ""
 
 # ── UAT-S-06: minRating=4 filter ───────────────────────────
@@ -134,12 +134,12 @@ assert_json_field "$BODY" '.pagination.totalPages' '"3"' "[UAT-S-09] pagination.
 echo ""
 
 # ── UAT-S-10: Compound search (q + district + tags) ────────
-echo "── UAT-S-10: Compound search q=workspace&district=Ba+Đình&tags=wifi"
+echo "── UAT-S-10: Compound search q=workspace with district and tag filters"
 do_get "/cafes?q=workspace&district=Ba+%C4%90%C3%ACnh&tags=wifi"
 assert_status_code 200 "$HTTP_STATUS" "[UAT-S-10] GET compound search → HTTP 200"
 assert_json_field "$BODY" '.status' '"success"' "[UAT-S-10] response.status = success"
 assert_json_array_not_empty "$BODY" '.data' "[UAT-S-10] At least 1 result matching all conditions"
-assert_all_field_equal "$BODY" '.data' '.district' 'Ba Đình' "[UAT-S-10] All results have district='Ba Đình'"
+assert_all_field_equal "$BODY" '.data' '.district' 'Ba Đình' "[UAT-S-10] All results match the requested district"
 assert_all_contain_tag "$BODY" '.data' 'wifi' "[UAT-S-10] All results have 'wifi' tag"
 assert_text_match_any "$BODY" '.data' "workspace" "[UAT-S-10] All results contain 'workspace' in a text field"
 echo ""

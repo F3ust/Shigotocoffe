@@ -1,160 +1,140 @@
-# BE CRUD API テスト / Tài liệu kiểm thử API CRUD
+# BE CRUD API Test Plan
 
-> **Sprint 1 — Task ID 9**  
-> QA担当: Ngọc Quý (QA Tester A)  
+> Sprint 1, Task ID 9  
+> Owner: Ngoc Quy, QA Tester A  
 > Branch: `feature/sprint-1-qa-completion`
 
----
+## Overview
 
-## 概要 / Tổng quan
+| Item | Value |
+|------|-------|
+| Scope | Cafe REST API: `GET /api/cafes`, `GET /api/cafes/:id`, `POST /api/cafes`, `PATCH /api/cafes/:id`, `DELETE /api/cafes/:id` |
+| Tooling | `bash`, `curl`, `jq` |
+| Dependencies | No npm packages |
+| Test cases | 23 logical cases |
+| Execution status | Not run in the QA agent. The backend was not running. |
 
-| 項目 | 内容 |
-|------|------|
-| Scope | REST API CRUD: `GET /api/cafes`, `GET /api/cafes/:id`, `POST /api/cafes`, `PATCH /api/cafes/:id`, `DELETE /api/cafes/:id` |
-| Tool | `bash` + `curl` + `jq` (no npm dependency) |
-| Test cases | **23 total** (7 + 3 + 6 + 5 + 4 = 25 assertions across 23 logical cases) |
-| Execution | Skipped — backend không chạy ở môi trường QA agent (xem bên dưới) |
+## Preconditions
 
----
-
-## Yêu cầu trước khi chạy / Pre-conditions
-
-1. **MongoDB đang chạy** (via Docker):
+1. Start MongoDB:
    ```bash
    docker compose up -d
    ```
-2. **Backend đang chạy** (port 5000):
+2. Start the backend on port `5000`:
    ```bash
    cd backend && npm run dev
    ```
-3. **DB đã được seed**:
+3. Seed the database:
    ```bash
    cd backend && npm run seed
    ```
-4. **`jq` đã cài** trong môi trường shell:
+4. Install `jq`:
    ```bash
-   # Ubuntu/WSL
    sudo apt-get install -y jq
-   # macOS
-   brew install jq
    ```
 
----
-
-## Cách chạy / How to run
+## Run
 
 ```bash
-# Từ root repo
+# From the repo root
 bash qa/be-crud-tests/run-all.sh
 
-# Override base URL nếu cần
+# Override the API base URL
 API_BASE=http://localhost:5000/api bash qa/be-crud-tests/run-all.sh
 
-# Chạy từng suite riêng lẻ
+# Run a single suite
 bash qa/be-crud-tests/01-get-list.sh
-bash qa/be-crud-tests/02-get-by-id.sh
-# ...
 ```
 
-Output mẫu khi pass:
-```
-╔══════════════════════════════════════════════╗
-║   Shigoto Coffee — BE CRUD API Test Runner   ║
-╚══════════════════════════════════════════════╝
-  API base: http://localhost:5000/api
+Example pass output:
+```text
+BE CRUD API Test Runner
+API base: http://localhost:5000/api
 
-✓ PASS — TC-01-01 GET /api/cafes → 200
-✓ PASS — TC-01-01 body.status = success
-...
-╔══════════════════════════════════════════════╗
-║            FINAL RESULTS                     ║
-╠══════════════════════════════════════════════╣
-║  Total: 23  | Pass: 23  | Fail: 0            ║
-╚══════════════════════════════════════════════╝
-✓ All tests passed!
+PASS - TC-01-01 GET /api/cafes returns 200
+PASS - TC-01-01 body.status = success
+
+FINAL RESULTS
+Total: 23 | Pass: 23 | Fail: 0
+All tests passed.
 ```
 
----
-
-## Bảng Test Case / Test Case Summary
+## Test Case Summary
 
 ### Suite 01 — GET /api/cafes (7 cases)
 
-| ID | Endpoint | Scenario | Expected Status | Ghi chú |
+| ID | Endpoint | Scenario | Expected Status | Notes |
 |----|----------|----------|-----------------|---------|
-| TC-01-01 | `GET /api/cafes` | Basic list: status, data array, pagination fields | 200 | data là array, pagination.{page,limit,total,totalPages} |
-| TC-01-02 | `GET /api/cafes?q=workspace` | Text search | 200 | Mọi kết quả chứa "workspace" trong name/description |
-| TC-01-03 | `GET /api/cafes?district=Ba+Đình` | District filter | 200 | Mọi kết quả có district="Ba Đình" (seed: 4 quán) |
-| TC-01-04 | `GET /api/cafes?minRating=4` | Rating filter | 200 | Mọi kết quả có averageRating ≥ 4 |
-| TC-01-05 | `GET /api/cafes?tags=wifi` | Single tag filter | 200 | Mọi kết quả có hashtags chứa "wifi" |
-| TC-01-06 | `GET /api/cafes?tags=wifi,outlets` | Multi-tag AND filter | 200 | Mọi kết quả có cả "wifi" VÀ "outlets" |
+| TC-01-01 | `GET /api/cafes` | Basic list: status, data array, pagination fields | 200 | `data` is an array; pagination fields exist |
+| TC-01-02 | `GET /api/cafes?q=workspace` | Text search | 200 | Every result contains `workspace` in name or description |
+| TC-01-03 | `GET /api/cafes?district=Ba+Dinh` | District filter | 200 | Every result belongs to the requested district |
+| TC-01-04 | `GET /api/cafes?minRating=4` | Rating filter | 200 | Every result has `averageRating >= 4` |
+| TC-01-05 | `GET /api/cafes?tags=wifi` | Single tag filter | 200 | Every result contains `wifi` |
+| TC-01-06 | `GET /api/cafes?tags=wifi,outlets` | Multi-tag AND filter | 200 | Every result contains both `wifi` and `outlets` |
 | TC-01-07 | `GET /api/cafes?page=2&limit=5` | Pagination | 200 | pagination.page=2, pagination.limit=5 |
 
 ### Suite 02 — GET /api/cafes/:id (3 cases)
 
-| ID | Endpoint | Scenario | Expected Status | Ghi chú |
+| ID | Endpoint | Scenario | Expected Status | Notes |
 |----|----------|----------|-----------------|---------|
 | TC-02-01 | `GET /api/cafes/:id` | Valid existing id | 200 | data._id match |
-| TC-02-02 | `GET /api/cafes/000000000000000000000000` | Non-existent valid ObjectId | 404 | message chứa "not found" |
-| TC-02-03 | `GET /api/cafes/abc` | Invalid id format | **500** ⚠ | **Known issue** — xem bên dưới |
+| TC-02-02 | `GET /api/cafes/000000000000000000000000` | Non-existent valid ObjectId | 404 | Error message includes `not found` |
+| TC-02-03 | `GET /api/cafes/abc` | Invalid id format | 500 | Known issue. See the note below. |
 
 ### Suite 03 — POST /api/cafes (6 cases)
 
-| ID | Endpoint | Scenario | Expected Status | Ghi chú |
+| ID | Endpoint | Scenario | Expected Status | Notes |
 |----|----------|----------|-----------------|---------|
-| TC-03-01 | `POST /api/cafes` | Valid body | 201 | data._id exists; id dùng cho suite 04–05 |
-| TC-03-02 | `POST /api/cafes` | Thiếu `name.vi` | 400 | ValidationError |
-| TC-03-03 | `POST /api/cafes` | Thiếu `openingHours.open` | 400 | ValidationError |
+| TC-03-01 | `POST /api/cafes` | Valid body | 201 | `data._id` exists; suites 04 and 05 reuse the id |
+| TC-03-02 | `POST /api/cafes` | Missing `name.vi` | 400 | ValidationError |
+| TC-03-03 | `POST /api/cafes` | Missing `openingHours.open` | 400 | ValidationError |
 | TC-03-04 | `POST /api/cafes` | `openingHours.open = "25:00"` | 400 | regex `^([01]\d|2[0-3]):[0-5]\d$` fail |
 | TC-03-05 | `POST /api/cafes` | `hashtags = ["invalid_tag"]` | 400 | Enum check: wifi,outlets,quiet,japanese,noTimeLimit |
 | TC-03-06 | `POST /api/cafes` | `location.coordinates = [200, 21.0]` | 400 | lng > 180 |
 
 ### Suite 04 — PATCH /api/cafes/:id (4 cases)
 
-| ID | Endpoint | Scenario | Expected Status | Ghi chú |
+| ID | Endpoint | Scenario | Expected Status | Notes |
 |----|----------|----------|-----------------|---------|
-| TC-04-01 | `PATCH /api/cafes/:id` | Valid partial update (description) | 200 | field updated trong response |
+| TC-04-01 | `PATCH /api/cafes/:id` | Valid partial update (description) | 200 | Response contains the updated field |
 | TC-04-02 | `PATCH /api/cafes/not-a-valid-id` | Invalid ObjectId | 400 | `mongoose.isValidObjectId()` guard |
 | TC-04-03 | `PATCH /api/cafes/000000000000000000000000` | Non-existent id | 404 | NotFoundError |
-| TC-04-04 | `PATCH /api/cafes/:id` body `{_id, averageRating: 9.9}` | Immutable fields stripped | 200 | averageRating không đổi, _id không đổi |
+| TC-04-04 | `PATCH /api/cafes/:id` body `{_id, averageRating: 9.9}` | Immutable fields stripped | 200 | `_id` and `averageRating` do not change |
 
 ### Suite 05 — DELETE /api/cafes/:id (3 cases)
 
-| ID | Endpoint | Scenario | Expected Status | Ghi chú |
+| ID | Endpoint | Scenario | Expected Status | Notes |
 |----|----------|----------|-----------------|---------|
 | TC-05-01 | `DELETE /api/cafes/:id` | Delete existing | 204 | Empty body |
-| TC-05-02 | `DELETE /api/cafes/:id` | Delete đã bị xóa (double-delete) | 404 | NotFoundError |
+| TC-05-02 | `DELETE /api/cafes/:id` | Delete the same cafe twice | 404 | NotFoundError |
 | TC-05-03 | `DELETE /api/cafes/bad-id-xyz` | Invalid ObjectId | 400 | `mongoose.isValidObjectId()` guard |
 
 ---
 
-## ⚠ Known Issues / Phát hiện khi review code
+## Known Issue
 
-### FINDING-01: GET /api/cafes/:id thiếu ObjectId format validation
+### FINDING-01: `GET /api/cafes/:id` does not validate ObjectId format
 
-**Mức độ:** Low (UX) — không phải security issue  
+**Severity:** Low  
 **File:** `backend/src/controllers/cafeController.ts`, function `getCafeById` (line 77–89)
 
-**Mô tả:**  
-`updateCafe` (line 199) và `deleteCafe` (line 330) đều có `if (!mongoose.isValidObjectId(id)) { throw new ValidationError(...) }` trước khi query DB.  
-`getCafeById` KHÔNG có guard này → khi gọi `Cafe.findById("abc")`, Mongoose throw `CastError` (không phải `AppError`) → `errorHandler` xử lý là unhandled error → trả **500** thay vì **400**.
+`updateCafe` and `deleteCafe` validate ObjectId format before querying MongoDB. `getCafeById` does not. A request such as `GET /api/cafes/abc` triggers a Mongoose `CastError`, so the error handler returns `500` instead of `400`.
 
-**Expected behavior:** 400 BadRequest với message rõ ràng  
-**Actual behavior (theo code review):** 500 Internal Server Error  
+**Expected behavior:** 400 Bad Request with a clear message  
+**Actual behavior from code review:** 500 Internal Server Error  
 
-**Khuyến nghị:** Thêm guard `if (!mongoose.isValidObjectId(id)) throw new ValidationError("Invalid cafe id")` vào `getCafeById`, tương tự như `updateCafe`/`deleteCafe`.  
-**Action:** Document only — KHÔNG sửa production code trong sprint này.
+**Recommendation:** Add `if (!mongoose.isValidObjectId(id)) throw new ValidationError("Invalid cafe id")` to `getCafeById`.  
+**Action:** Document only. Do not change production code in this QA task.
 
 ---
 
-## Kết quả thực thi / Execution Results
+## Execution Results
 
-> **Execution chưa thực hiện ở môi trường QA agent vì backend không đang chạy.**  
-> Scripts đã được code review qua manual reasoning với production code  
-> (`cafeController.ts`, `Cafe.ts`, `errorHandler.ts`, `errors.ts`).  
-> Mọi expected behavior đã được xác minh bằng static analysis.
+> The QA agent did not run the suite because the backend was not running.
+> The scripts were reviewed against `cafeController.ts`, `Cafe.ts`, `errorHandler.ts`, and `errors.ts`.
+> Run the scripts on a local environment before the Sprint Review.
 
-**Cách verify lại khi có môi trường:**
+Run this command when the backend is available:
 ```bash
 bash qa/be-crud-tests/run-all.sh 2>&1 | tee qa/be-crud-tests/execution-log.txt
 ```
@@ -170,20 +150,20 @@ bash qa/be-crud-tests/run-all.sh 2>&1 | tee qa/be-crud-tests/execution-log.txt
 
 ---
 
-## Cấu trúc file / File structure
+## File Structure
 
 ```
 qa/be-crud-tests/
-├── README.md                  ← Tài liệu này
-├── run-all.sh                 ← Runner chính, chạy 01→05 tuần tự
+├── README.md                  # This file
+├── run-all.sh                 # Runs suites 01 through 05
 ├── lib/
-│   └── assert.sh              ← Helper: assertStatus, assertJsonField, assertJsonNotNull
-├── 01-get-list.sh             ← 7 test: GET /api/cafes với filters/pagination
-├── 02-get-by-id.sh            ← 3 test: GET /api/cafes/:id
-├── 03-create.sh               ← 6 test: POST /api/cafes + validation
-├── 04-update.sh               ← 4 test: PATCH /api/cafes/:id
-├── 05-delete.sh               ← 3 test: DELETE /api/cafes/:id
+│   └── assert.sh              # Shared assertions
+├── 01-get-list.sh             # GET list with filters and pagination
+├── 02-get-by-id.sh            # GET by id
+├── 03-create.sh               # POST create and validation cases
+├── 04-update.sh               # PATCH update cases
+├── 05-delete.sh               # DELETE cases
 └── fixtures/
-    ├── valid-cafe.json        ← Body hợp lệ POST (tên "QA Test Cafe")
-    └── update-cafe.json       ← Body PATCH partial
+    ├── valid-cafe.json        # Valid POST body
+    └── update-cafe.json       # Partial PATCH body
 ```

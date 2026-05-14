@@ -1,17 +1,17 @@
 {
   "name": {
-    "ja": "QAテストカフェ",
+    "ja": "QA Test Cafe",
     "vi": "QA Test Cafe"
   },
   "description": {
-    "ja": "これはQAテスト用の仮カフェです。実際の営業店舗ではありません。",
-    "vi": "Đây là quán cà phê giả dùng cho QA test. Không phải quán thực tế."
+    "ja": "Temporary cafe record for QA API tests.",
+    "vi": "Temporary cafe record for QA API tests."
   },
   "address": {
-    "ja": "テスト通り1番地、ホアンキエム区、ハノイ",
-    "vi": "1 Phố Kiểm Thử, Hoàn Kiếm, Hà Nội"
+    "ja": "1 QA Test Street, Hoan Kiem, Hanoi",
+    "vi": "1 QA Test Street, Hoan Kiem, Hanoi"
   },
-  "district": "Hoàn Kiếm",
+  "district": "Hoan Kiem",
   "openingHours": {
     "open": "08:00",
     "close": "22:00"

@@ -60,22 +60,22 @@ else
     "Only $COUNT/$TOTAL items matched"
 fi
 
-# ── TC-01-03: District filter ?district=Ba+Đình ──
+# ── TC-01-03: District filter ──
 echo ""
 echo "── TC-01-03: District filter"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" "${BASE_URL}/cafes?district=Ba%20%C4%90%C3%ACnh")
 BODY=$(echo "$RESP" | sed '$d')
 STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
 
-assert_status_code 200 "$STATUS" "TC-01-03 GET /api/cafes?district=Ba+Đình → 200"
+assert_status_code 200 "$STATUS" "TC-01-03 GET /api/cafes with district filter returns 200"
 assert_json_field "$BODY" '.status' 'success' "TC-01-03 status = success"
 
 TOTAL=$(echo "$BODY" | jq '.data | length' 2>/dev/null)
 NON_MATCHING=$(echo "$BODY" | jq '[.data[] | select(.district != "Ba Đình")] | length' 2>/dev/null)
 if [ "$NON_MATCHING" -eq 0 ] && [ "$TOTAL" -gt 0 ]; then
-  _pass "TC-01-03 all results have district = 'Ba Đình'"
+  _pass "TC-01-03 all results match the requested district"
 else
-  _fail "TC-01-03 all results have district = 'Ba Đình'" \
+  _fail "TC-01-03 all results match the requested district" \
     "$NON_MATCHING/$TOTAL items have wrong district"
 fi
 

@@ -1,416 +1,208 @@
-# UAT シナリオ / Tình huống kiểm thử UAT
-## 検索フロー全体の受入テスト — Kiểm thử chấp nhận toàn bộ luồng tìm kiếm
+# UAT Scenarios: Search Flow
 
-> **Sprint 1 · Task ID 14**  
-> QA担当 / QA phụ trách: Quốc Khánh (QA Tester B)  
-> Branch: `feature/sprint-1-qa-completion`  
-> Product Backlog: P_ID 1 (店舗一覧表示), P_ID 3 (多言語対応), P_ID 4 (絞り込み検索)  
-> 参照画面 / Màn hình tham chiếu: Screen 3 (ホーム ゲストユーザー向け店舗一覧)
+> Sprint 1, Task ID 14  
+> Owner: Quoc Khanh, QA Tester B  
+> Product Backlog: P_ID 1 (Cafe List Display), P_ID 3 (Japanese and Vietnamese Support), P_ID 4 (Search and Filters)  
+> Reference screen: Screen 3, Guest Home Cafe List
 
----
+## Seed Data Baseline
 
-## Seed Data Baseline / Dữ liệu mẫu cơ sở
+The test suite assumes the default 12 cafes from `backend/src/seeds/cafeSeedData.ts`.
 
-DB seeded with 12 cafes. Key facts used in scenarios:
+Baseline counts:
+- Target district cafes: 4
+- Cafes with `outlets`: 7
+- Cafes with `averageRating >= 4`: 11
+- Cafes with `wifi`: 12
 
-| # | Name (JP) | Name (VI) | District | Rating | Hashtags |
-|---|-----------|-----------|----------|--------|---------|
-| 1 | トランクイル・コーヒー | Tranquil Coffee | Hoàn Kiếm | 4.5 | wifi, quiet, noTimeLimit |
-| 2 | ザ・ワークスペース | The Workspace | Ba Đình | 4.8 | wifi, outlets, quiet, japanese, noTimeLimit |
-| 3 | カフェ・フォーン | Café Phương | Hoàn Kiếm | 4.2 | wifi, quiet |
-| 4 | コンマ・コーヒー | Comma Coffee | Đống Đa | 4.6 | wifi, outlets, noTimeLimit |
-| 5 | サクラ・カフェ | Sakura Café | Ba Đình | 4.3 | wifi, japanese, quiet |
-| 6 | レイクサイド・ブリュー | Lakeside Brew | Tây Hồ | 4.0 | wifi, outlets |
-| 7 | フォーカス・ラボ | Focus Lab | Cầu Giấy | 4.7 | wifi, outlets, quiet, noTimeLimit |
-| 8 | グリーン・バンブー | Green Bamboo | Hai Bà Trưng | 3.9 | wifi, quiet |
-| 9 | ノマド・ハブ | Nomad Hub | Đống Đa | 4.4 | wifi, outlets, noTimeLimit |
-| 10 | モーニング・グローリー | Morning Glory | Ba Đình | 4.1 | wifi, outlets, quiet |
-| 11 | ザ・リーディング・ルーム | The Reading Room | Đống Đa | 4.6 | wifi, quiet, noTimeLimit |
-| 12 | ベトジャパン・カフェ | VietJapan Café | Ba Đình | 4.4 | wifi, outlets, japanese |
+## Preconditions
 
-**Ba Đình cafes (4):** The Workspace, Sakura Café, Morning Glory, VietJapan Café  
-**Cafes with outlets (7):** The Workspace, Comma Coffee, Lakeside Brew, Focus Lab, Nomad Hub, Morning Glory, VietJapan Café  
-**Cafes with averageRating ≥ 4 (11):** All except Green Bamboo (3.9)
+- MongoDB is running.
+- Backend is running at `http://localhost:5000`.
+- The database contains the default 12 seed cafes.
+- For UI checks, the frontend is running at `http://localhost:5173`.
 
----
+## Scenario Template
 
-### UAT-S-01 — ゲストが店舗一覧を表示する / Khách mở danh sách quán mặc định
+Each scenario includes persona, backlog mapping, steps, expected result, and verification method.
 
-**Persona:** Guest user / Khách vãng lai (người Nhật làm việc remote tại Hà Nội)  
-**P_ID liên quan:** P_ID 1.0 店舗一覧表示
+## UAT-S-01: Guest opens the default cafe list
 
-**Pre-condition:**
-- MongoDB đang chạy
-- Backend dev đã start tại port 5000
-- DB đã seed 12 quán mặc định (chưa modify)
-
-**Acceptance Criteria (từ spec):**
-- Danh sách quán hiển thị dưới dạng card
-- Mỗi card có ảnh, tên quán, địa chỉ, điểm đánh giá trung bình, tags
-- Default: tối đa 12 quán mỗi trang, phân trang được cung cấp
-
-**Test Steps:**
-1. Mở `http://localhost:5173` (hoặc gọi `GET /api/cafes`)
-2. Không nhập keyword, không chọn filter nào
-3. Xem danh sách hiển thị
+**Persona:** Guest user looking for a work-friendly cafe.  
+**Related backlog:** P_ID 1.0  
+**Steps:**
+1. Open `http://localhost:5173`, or call `GET /api/cafes`.
+2. Do not enter a keyword.
+3. Do not select filters.
 
 **Expected Result:**
-- HTTP 200
-- `data` array có đúng 12 items
-- `pagination.total = 12`, `pagination.page = 1`, `pagination.limit = 12`
-- `status = "success"`
-- Mỗi item có `name`, `district`, `averageRating`, `hashtags`
+- API returns HTTP 200.
+- `data` contains 12 cafes.
+- `pagination.page` is `1`.
+- `pagination.limit` is `12`.
+- Each item has `name`, `district`, `averageRating`, and `hashtags`.
 
-**Verification method:**
-- API: `curl http://localhost:5000/api/cafes`
-- UI: Mở http://localhost:5173, đếm số card hiển thị
+**Verification:** API and UI.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-02: Search with a Japanese keyword
 
----
-
-### UAT-S-02 — 日本語キーワード検索 / Tìm kiếm từ khóa tiếng Nhật
-
-**Persona:** Guest user / Người Nhật làm việc remote tại Hà Nội  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索; P_ID 3.0 多言語対応
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- Có thể tìm kiếm theo từ khóa (キーワードによる検索が可能)
-- Chỉ hiển thị quán phù hợp với điều kiện
-
-**Test Steps:**
-1. Nhập keyword `コーヒー` vào search bar
-2. Nhấn "検索" (Search button)
-3. Xem kết quả
+**Persona:** Japanese guest user.  
+**Related backlog:** P_ID 3.0, P_ID 4.0  
+**Steps:**
+1. Search with a Japanese cafe-related keyword from the seed data.
+2. Submit the search.
 
 **Expected Result:**
-- HTTP 200
-- Tất cả items trong `data` phải match `コーヒー` trong ít nhất một trong 4 trường: `name.ja`, `name.vi`, `description.ja`, `description.vi`
-- Cụ thể: "トランクイル・コーヒー" (name.ja), "グリーン・バンブー" (description.ja: "オーガニックコーヒー")
-- `pagination.total` chính xác với số kết quả thực tế
+- API returns HTTP 200.
+- Each result contains the keyword in `name.ja`, `name.vi`, `description.ja`, or `description.vi`.
+- At least one cafe matches.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?q=%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC"`
-- UI: nhập "コーヒー" → kiểm tra tên quán hiển thị
+**Verification:** API and UI.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-03: Search with a Vietnamese keyword
 
----
-
-### UAT-S-03 — ベトナム語キーワード検索 / Tìm kiếm từ khóa tiếng Việt
-
-**Persona:** Guest user / Người Việt hoặc người Nhật dùng chế độ tiếng Việt  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索; P_ID 3.0 多言語対応
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- Tìm kiếm theo từ khóa hoạt động với cả tiếng Việt
-- Kết quả chứa keyword ở bất kỳ trường text nào
-
-**Test Steps:**
-1. Nhập keyword `yên tĩnh` vào search bar
-2. Nhấn "Tìm kiếm"
-3. Xem kết quả
+**Persona:** Guest user using Vietnamese labels.  
+**Related backlog:** P_ID 3.0, P_ID 4.0  
+**Steps:**
+1. Search with a Vietnamese quiet-cafe keyword from the seed data.
+2. Submit the search.
 
 **Expected Result:**
-- HTTP 200
-- Tất cả items match "yên tĩnh" trong name.ja / name.vi / description.ja / description.vi
-- Cụ thể: Tranquil Coffee (description.vi: "Quán cà phê yên tĩnh bên Hồ Hoàn Kiếm")
-- Regex case-insensitive, không phân biệt dấu theo implementation (lưu ý: `new RegExp("yên tĩnh", "i")` — regex "i" trong JS không normalize Unicode diacritics)
+- API returns HTTP 200.
+- At least one cafe matches.
+- Matching uses the bilingual name and description fields.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?q=y%C3%AAn+t%C4%A9nh"`
+**Verification:** API and UI.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-04: Search with no matching keyword
 
----
-
-### UAT-S-04 — 一致なし → 空の結果 / Keyword không match → empty state
-
-**Persona:** Guest user  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- 「該当する店舗が存在しない場合、該当なしのメッセージが表示される」
-- Nếu không có kết quả, hiển thị thông báo không tìm thấy
-
-**Test Steps:**
-1. Nhập keyword `xyz_nomatch_9999_uat` (không thể tồn tại)
-2. Nhấn Search
-3. Xem kết quả
+**Persona:** Guest user.  
+**Related backlog:** P_ID 4.0  
+**Steps:**
+1. Search for `xyz_nomatch_9999_uat`.
+2. Submit the search.
 
 **Expected Result:**
-- API: HTTP 200 (không phải 404 — không có quán là valid state)
-- `data = []` (empty array)
-- `pagination.total = 0`
-- UI: Hiển thị empty state component với text `t("cafe.no_results")` ("Không tìm thấy quán nào" / "カフェが見つかりませんでした")
+- API returns HTTP 200.
+- `data` is an empty array.
+- `pagination.total` is `0`.
+- UI shows the empty state.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?q=xyz_nomatch_9999_uat"`
-- UI: kiểm tra icon ☕ + message xuất hiện
+**Verification:** API and UI.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-05: Filter by district
 
----
-
-### UAT-S-05 — エリアフィルター「Ba Đình」/ Filter theo quận Ba Đình
-
-**Persona:** Guest user muốn tìm quán gần khu vực cụ thể  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- 「選択した地域で店舗一覧を絞り込みます」
-- Lọc theo district, chỉ hiển thị quán thuộc district đó
-
-**Test Steps:**
-1. Chọn "Ba Đình" từ district dropdown trong SearchBar
-2. Nhấn Search (không nhập keyword, không filter khác)
-3. Xem kết quả
+**Persona:** Guest user searching in a specific district.  
+**Related backlog:** P_ID 4.0  
+**Steps:**
+1. Select the target district used by `run-search-uat.sh`.
+2. Submit the search.
 
 **Expected Result:**
-- HTTP 200
-- Đúng 4 quán: The Workspace, Sakura Café, Morning Glory, VietJapan Café
-- Tất cả items có `district = "Ba Đình"`
-- `pagination.total = 4`
+- API returns HTTP 200.
+- Exactly 4 cafes return.
+- Every item has the selected district.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?district=Ba+%C4%90%C3%ACnh"`
+**Verification:** API and UI.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-06: Filter by minimum rating
 
----
-
-### UAT-S-06 — 評価フィルター（minRating=4）/ Filter theo đánh giá ≥ 4 sao
-
-**Persona:** Guest user muốn tìm quán chất lượng cao  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- 「Wi-Fi環境、コンセントの有無、静かさ、長時間滞在の可否などの条件で絞り込みが可能」
-- Filter "4つ星以上" / "4 sao trở lên" hoạt động đúng
-
-**Test Steps:**
-1. Mở Filter Panel (click nút ▼)
-2. Chọn checkbox "4つ星以上" (rating_4, value="4")
-3. Nhấn "適用" / "Áp dụng"
-4. Xem kết quả
+**Persona:** Guest user looking for high-rated cafes.  
+**Related backlog:** P_ID 4.0  
+**Steps:**
+1. Select minimum rating `4`.
+2. Apply filters.
 
 **Expected Result:**
-- HTTP 200
-- 11 quán (Green Bamboo với 3.9 bị loại trừ)
-- Tất cả items có `averageRating >= 4`
-- `pagination.total = 11`
+- API returns HTTP 200.
+- Every item has `averageRating >= 4`.
+- The seed data returns 11 cafes.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?minRating=4"`
+**Verification:** API and UI.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-07: Filter by a single tag
 
----
-
-### UAT-S-07 — 単一タグフィルター「wifi」/ Filter single tag wifi
-
-**Persona:** Guest user cần Wi-Fi để làm việc  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- 「Wi-Fiが強い ... などの条件で絞り込みが可能」
-
-**Test Steps:**
-1. Gọi API với `tags=wifi`
-2. (UI: tick checkbox "Wi-Fi mạnh" → Apply)
+**Persona:** Guest user looking for Wi-Fi.  
+**Related backlog:** P_ID 4.0  
+**Steps:**
+1. Call `GET /api/cafes?tags=wifi`.
 
 **Expected Result:**
-- HTTP 200
-- 12 quán (tất cả đều có wifi trong seed)
-- Tất cả items có `"wifi"` trong `hashtags`
-- `pagination.total = 12`
+- API returns HTTP 200.
+- Every item includes `wifi` in `hashtags`.
+- The seed data returns 12 cafes.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?tags=wifi"`
+**Verification:** API. UI tag checkboxes are a documented gap.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-08: Filter by multiple tags with AND matching
 
----
-
-### UAT-S-08 — 複数タグAND検索（wifi + outlets）/ AND-match filter wifi + outlets
-
-**Persona:** Guest user cần cả Wi-Fi lẫn ổ cắm để sạc máy tính  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- Tags filter là AND-match: tất cả tags phải có mặt (implementation: `$all` operator)
-
-**Test Steps:**
-1. Gọi API với `tags=wifi,outlets`
-2. (UI: nếu tag checkboxes được render cho filter — hiện tại FilterPanel chưa render tag checkboxes, xem finding UAT-F-01)
+**Persona:** Guest user looking for Wi-Fi and outlets.  
+**Related backlog:** P_ID 4.0  
+**Steps:**
+1. Call `GET /api/cafes?tags=wifi,outlets`.
 
 **Expected Result:**
-- HTTP 200
-- 7 quán có cả wifi VÀ outlets: The Workspace, Comma Coffee, Lakeside Brew, Focus Lab, Nomad Hub, Morning Glory, VietJapan Café
-- Tất cả items có cả `"wifi"` và `"outlets"` trong `hashtags`
-- `pagination.total = 7`
+- API returns HTTP 200.
+- Every item contains both `wifi` and `outlets`.
+- The seed data returns 7 cafes.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?tags=wifi%2Coutlets"`
+**Verification:** API. UI tag checkboxes are a documented gap.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-09: Check pagination
 
----
-
-### UAT-S-09 — ページネーション（page=2, limit=5）/ Phân trang
-
-**Persona:** Guest user browse nhiều quán  
-**P_ID liên quan:** P_ID 1.0 店舗一覧表示
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- Danh sách phân trang chính xác
-
-**Test Steps:**
-1. Gọi `GET /api/cafes?page=2&limit=5`
-2. Kiểm tra response
+**Persona:** Guest user browsing the second page.  
+**Related backlog:** P_ID 1.0  
+**Steps:**
+1. Call `GET /api/cafes?page=2&limit=5`.
 
 **Expected Result:**
-- HTTP 200
-- `pagination.page = 2`, `pagination.limit = 5`
-- `data` có đúng 5 items (items 6-10 theo sort order)
-- `pagination.total = 12`
-- `pagination.totalPages = 3` (ceil(12/5) = 3)
+- API returns HTTP 200.
+- `pagination.page` is `2`.
+- `pagination.limit` is `5`.
+- `data` contains 5 cafes.
+- `pagination.totalPages` is `3`.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?page=2&limit=5"`
+**Verification:** API.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-10: Combine keyword, district, and tag filters
 
----
-
-### UAT-S-10 — 複合検索（キーワード + エリア + タグ）/ Tìm kiếm kết hợp
-
-**Persona:** Guest user biết rõ nhu cầu (khu vực + tiện ích + keyword)  
-**P_ID liên quan:** P_ID 4.0 絞り込み検索
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- 「指定した条件に一致する店舗のみが一覧に表示される」
-- Tất cả điều kiện được AND-combine
-
-**Test Steps:**
-1. Gọi API với `q=workspace&district=Ba Đình&tags=wifi`
-2. Kiểm tra tất cả điều kiện đều được áp dụng đồng thời
+**Persona:** Guest user refining a search.  
+**Related backlog:** P_ID 4.0  
+**Steps:**
+1. Call `GET /api/cafes` with keyword, district, and `wifi` tag filters.
 
 **Expected Result:**
-- HTTP 200
-- Tất cả items phải: chứa "workspace" trong text fields, có district="Ba Đình", có tag "wifi"
-- Cụ thể: "The Workspace" / "ザ・ワークスペース" thỏa mãn tất cả (Ba Đình, wifi, name.vi="The Workspace")
-- Không có item nào vi phạm bất kỳ điều kiện nào
+- API returns HTTP 200.
+- Every result matches all three conditions.
+- Results match the requested district, include `wifi`, and match the keyword.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?q=workspace&district=Ba+D%C3%ACnh&tags=wifi"`
-  (Note: district "Ba Đình" = "Ba+%C4%90%C3%ACnh" URL-encoded)
+**Verification:** API.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-11: Check sort order
 
----
-
-### UAT-S-11 — ソート順（averageRating 降順）/ Thứ tự sắp xếp
-
-**Persona:** Guest user muốn thấy quán tốt nhất đầu tiên  
-**P_ID liên quan:** P_ID 1.0 店舗一覧表示
-
-**Pre-condition:**
-- MongoDB đang chạy, backend port 5000, DB seed 12 quán
-
-**Acceptance Criteria (từ spec):**
-- Implementation: `sort({ averageRating: -1, createdAt: -1 })` trong `getCafes`
-
-**Test Steps:**
-1. Gọi `GET /api/cafes?limit=12` (lấy tất cả)
-2. Kiểm tra thứ tự của `data` array
+**Persona:** Guest user expects the best-rated cafes first.  
+**Related backlog:** P_ID 1.0  
+**Steps:**
+1. Call `GET /api/cafes?limit=12`.
 
 **Expected Result:**
-- Quán đầu tiên: "ザ・ワークスペース" / "The Workspace" với `averageRating = 4.8` (cao nhất)
-- Thứ tự tiếp theo (từ seed data, sort by rating desc):
-  4.8 → 4.7 → 4.6 / 4.6 → 4.5 → 4.4 / 4.4 → 4.3 → 4.2 → 4.1 → 4.0 → 3.9
-- Với tie (4.6: Comma Coffee vs Reading Room; 4.4: Nomad Hub vs VietJapan), thứ tự phụ theo `createdAt` desc (phụ thuộc DB insertion order)
-- Toàn bộ array `averageRating` là non-increasing
+- API returns HTTP 200.
+- Results sort by `averageRating` descending.
+- The first item has `averageRating = 4.8`.
 
-**Verification method:**
-- API: `curl "http://localhost:5000/api/cafes?limit=12" | jq '[.data[].averageRating]'`
+**Verification:** API.
 
-**Status:** SKIPPED-env-not-ready
+## UAT-S-12: Click a cafe card
 
----
+**Persona:** Guest user wants cafe details.  
+**Related backlog:** P_ID 1.0, P_ID 5.0  
+**Steps:**
+1. Open the home page.
+2. Click a cafe card.
 
-### UAT-S-12 — UIカード選択 → 詳細画面遷移 / Click card → chuyển trang chi tiết
+**Expected Result:**
+- Sprint 1 records this as a known limitation.
+- The cafe detail page is outside Sprint 1 scope.
+- Do not mark this scenario as failed for Sprint 1.
 
-**Persona:** Guest user muốn xem chi tiết một quán  
-**P_ID liên quan:** P_ID 5.0 店舗詳細表示 (Screen 4 — out of Sprint 1 scope)
-
-**Pre-condition:**
-- Frontend dev tại port 5173
-- Ít nhất 1 quán hiển thị trong danh sách
-
-**Acceptance Criteria (từ spec):**
-- Screen 3 item 4.0: 「各構成要素は画面ID5と同様のロジックで表示・操作される」
-- Click card → chuyển sang Screen 4 (店舗詳細画面)
-
-**Test Steps:**
-1. Mở http://localhost:5173
-2. Click vào bất kỳ CafeCard nào trong danh sách
-
-**Expected Result (theo spec):**
-- Chuyển hướng sang trang chi tiết quán (Screen 4)
-- Hiển thị thông tin chi tiết: tên, đánh giá, giờ mở cửa, mô tả, hashtags, địa chỉ
-
-**Sprint 1 Actual Behavior:**
-- **Known limitation per Sprint 1 scope / POT合意済み**
-- CafeCard component chưa implement onClick navigation
-- Detail page (Screen 4) chưa được xây dựng trong Sprint 1
-- Behavior hiện tại: no-op hoặc placeholder
-
-> ⚠️ **Status: SKIPPED-known-limitation**  
-> Không mark FAIL. Theo thỏa thuận Sprint 1, P_ID 5 (店舗詳細表示) nằm ngoài scope của sprint này. Sẽ được implement và test trong Sprint 2.
-
----
-
-## Tổng hợp / Summary
-
-| ID | Scenario | Type | Status |
-|----|----------|------|--------|
-| UAT-S-01 | Default list 12 cafes | Happy | SKIPPED-env-not-ready |
-| UAT-S-02 | JP keyword search "コーヒー" | Happy bilingual | SKIPPED-env-not-ready |
-| UAT-S-03 | VI keyword search "yên tĩnh" | Happy bilingual | SKIPPED-env-not-ready |
-| UAT-S-04 | No-match → empty state | Edge | SKIPPED-env-not-ready |
-| UAT-S-05 | District filter "Ba Đình" | Happy | SKIPPED-env-not-ready |
-| UAT-S-06 | minRating=4 filter | Happy | SKIPPED-env-not-ready |
-| UAT-S-07 | Single tag filter "wifi" | Happy | SKIPPED-env-not-ready |
-| UAT-S-08 | AND-match tags wifi+outlets | Happy compound | SKIPPED-env-not-ready |
-| UAT-S-09 | Pagination page=2&limit=5 | Happy | SKIPPED-env-not-ready |
-| UAT-S-10 | Compound search (q+district+tags) | Happy compound | SKIPPED-env-not-ready |
-| UAT-S-11 | Sort by averageRating desc | Happy | SKIPPED-env-not-ready |
-| UAT-S-12 | UI: Click card → detail page | Known limitation | SKIPPED-known-limitation |
+**Verification:** Manual UI note.

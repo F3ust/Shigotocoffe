@@ -29,7 +29,7 @@ echo "Using CREATED_CAFE_ID: $CREATED_CAFE_ID"
 # ── TC-04-01: PATCH with valid partial body → 200, field updated ──
 echo ""
 echo "── TC-04-01: PATCH valid partial body (update description)"
-UPDATE_BODY='{"description": {"ja": "更新されたテスト説明", "vi": "Mô tả cập nhật"}}'
+UPDATE_BODY='{"description": {"ja": "Updated QA test description", "vi": "Updated QA test description"}}'
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
   -H "Content-Type: application/json" \
@@ -40,8 +40,8 @@ STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
 
 assert_status_code 200 "$STATUS" "TC-04-01 PATCH /api/cafes/:id (valid) → 200"
 assert_json_field "$BODY" '.status' 'success' "TC-04-01 body.status = success"
-assert_json_field "$BODY" '.data.description.vi' 'Mô tả cập nhật' "TC-04-01 description.vi updated"
-assert_json_field "$BODY" '.data.description.ja' '更新されたテスト説明' "TC-04-01 description.ja updated"
+assert_json_field "$BODY" '.data.description.vi' 'Updated QA test description' "TC-04-01 description.vi updated"
+assert_json_field "$BODY" '.data.description.ja' 'Updated QA test description' "TC-04-01 description.ja updated"
 
 # ── TC-04-02: PATCH with invalid ObjectId format → 400 ──
 echo ""
@@ -49,7 +49,7 @@ echo "── TC-04-02: PATCH invalid ObjectId"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
   -H "Content-Type: application/json" \
-  -d '{"district": "Hoàn Kiếm"}' \
+  -d '{"district": "Hoan Kiem"}' \
   "${BASE_URL}/cafes/not-a-valid-id")
 BODY=$(echo "$RESP" | sed '$d')
 STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
@@ -70,7 +70,7 @@ echo "── TC-04-03: PATCH non-existent ObjectId"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
   -H "Content-Type: application/json" \
-  -d '{"district": "Hoàn Kiếm"}' \
+  -d '{"district": "Hoan Kiem"}' \
   "${BASE_URL}/cafes/000000000000000000000000")
 BODY=$(echo "$RESP" | sed '$d')
 STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
@@ -87,7 +87,7 @@ CURRENT=$(curl -s "${BASE_URL}/cafes/${CREATED_CAFE_ID}")
 CURRENT_RATING=$(echo "$CURRENT" | jq -r '.data.averageRating // 0' 2>/dev/null)
 echo "  Current averageRating: $CURRENT_RATING"
 
-PATCH_BODY="{\"_id\": \"000000000000000000000000\", \"averageRating\": 9.9, \"district\": \"Hoàn Kiếm\"}"
+PATCH_BODY="{\"_id\": \"000000000000000000000000\", \"averageRating\": 9.9, \"district\": \"Hoan Kiem\"}"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
   -H "Content-Type: application/json" \
@@ -98,7 +98,7 @@ STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
 
 assert_status_code 200 "$STATUS" "TC-04-04 PATCH with immutable fields → 200 (not blocked)"
 assert_json_field "$BODY" '.status' 'success' "TC-04-04 body.status = success"
-assert_json_field "$BODY" '.data.district' 'Hoàn Kiếm' "TC-04-04 district was updated"
+assert_json_field "$BODY" '.data.district' 'Hoan Kiem' "TC-04-04 district was updated"
 
 # averageRating should NOT have changed to 9.9
 RETURNED_RATING=$(echo "$BODY" | jq -r '.data.averageRating' 2>/dev/null)

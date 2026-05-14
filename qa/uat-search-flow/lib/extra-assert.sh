@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Extra assert helpers for UAT search flow tests
 # Extends qa/be-crud-tests/lib/assert.sh with collection-level checks
-# Author: QA Tester B (Quốc Khánh) — Sprint 1, Task ID 14
+# Author: QA Tester B (Quoc Khanh) — Sprint 1, Task ID 14
 # Usage: source this file AFTER sourcing ../be-crud-tests/lib/assert.sh
 
 # assert_json_array_length <json_string> <jq_path_to_array> <expected_length> <test_name>
@@ -47,7 +47,7 @@ assert_json_array_length_gte() {
 
 # assert_all_field_equal <json_string> <jq_data_path> <field_path> <expected_value> <test_name>
 # Checks that every item in the array at data_path has field_path equal to expected_value.
-# Example: assert_all_field_equal "$body" '.data' '.district' 'Ba Đình' "all items in Ba Đình"
+# Example: assert_all_field_equal "$body" '.data' '.district' 'District Name' "all items match district"
 assert_all_field_equal() {
   local json="$1"
   local data_path="$2"
