@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { Cafe } from "../models/Cafe";
+import { Review } from "../models/Review";
 import { NotFoundError, ValidationError } from "../utils/errors";
 
 interface CafeQueryParams {
@@ -74,17 +75,62 @@ export async function getCafes(req: Request, res: Response): Promise<void> {
   });
 }
 
+type SupportedLang = "ja" | "vi";
+
 export async function getCafeById(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id)) {
+    throw new ValidationError("Invalid cafe id");
+  }
+
   const cafe = await Cafe.findById(id).lean();
 
   if (!cafe) {
     throw new NotFoundError(`Cafe not found: ${id}`);
   }
 
+  const langParam = (req.query.lang as string | undefined)?.toLowerCase();
+  const lang: SupportedLang | undefined =
+    langParam === "ja" || langParam === "vi" ? langParam : undefined;
+
+  const data: Record<string, unknown> = { ...cafe };
+
+  if (lang) {
+    data.localized = {
+      lang,
+      name: cafe.name[lang],
+      description: cafe.description[lang],
+      address: cafe.address[lang],
+    };
+  }
+
   res.json({
     status: "success",
-    data: cafe,
+    data,
+  });
+}
+
+export async function getCafeReviews(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id)) {
+    throw new ValidationError("Invalid cafe id");
+  }
+
+  const cafeExists = await Cafe.exists({ _id: id });
+  if (!cafeExists) {
+    throw new NotFoundError(`Cafe not found: ${id}`);
+  }
+
+  const reviews = await Review.find({ cafe: id })
+    .sort({ createdAt: -1 })
+    .populate({ path: "user", select: "name email" })
+    .lean();
+
+  res.json({
+    status: "success",
+    data: reviews,
   });
 }
 

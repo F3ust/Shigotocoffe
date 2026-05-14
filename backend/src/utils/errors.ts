@@ -27,3 +27,17 @@ export class ValidationError extends AppError {
     this.name = "ValidationError";
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message = "Unauthorized") {
+    super(message, 401);
+    this.name = "UnauthorizedError";
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message = "Conflict") {
+    super(message, 409);
+    this.name = "ConflictError";
+  }
+}

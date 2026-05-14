@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "./config";
 import { errorHandler } from "./middleware/errorHandler";
 import cafeRoutes from "./routes/cafeRoutes";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/cafes", cafeRoutes);
 
 // Global error handler (must be last)

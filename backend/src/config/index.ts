@@ -6,6 +6,8 @@ interface AppConfig {
   mongodbUri: string;
   nodeEnv: string;
   corsOrigin: string;
+  jwtSecret: string;
+  jwtExpiresIn: string;
 }
 
 function requireEnv(key: string, fallback?: string): string {
@@ -24,4 +26,6 @@ export const config: AppConfig = {
   ),
   nodeEnv: requireEnv("NODE_ENV", "development"),
   corsOrigin: requireEnv("CORS_ORIGIN", "http://localhost:5173"),
+  jwtSecret: requireEnv("JWT_SECRET"),
+  jwtExpiresIn: requireEnv("JWT_EXPIRES_IN", "7d"),
 };
