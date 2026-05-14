@@ -1,0 +1,67 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║   Shigoto Coffee — Environment Verification Script            ║
+║   Local development environment checks                        ║
+╚══════════════════════════════════════════════════════════════╝
+  Date    : 2026-05-14 13:38:18
+  Host    : Faust
+  Shell   : 5.2.21(1)-release
+
+  Repo    : <repo-root>
+
+──────────────────────────────────────────────────────────────
+ [1/11] Node.js >= 18
+  ✓ PASS  Node.js v20.20.2 (>= 18 required)
+
+──────────────────────────────────────────────────────────────
+ [2/11] npm available
+  ✓ PASS  npm v10.8.2 found
+
+──────────────────────────────────────────────────────────────
+ [3/11] Docker CLI available
+  ✓ PASS  Docker 2 found
+
+──────────────────────────────────────────────────────────────
+ [4/11] Docker Compose V2 (docker compose)
+  ✗ FAIL  docker compose V2 not found
+         → Use 'docker compose' (V2), not 'docker-compose' (V1). Upgrade Docker Desktop.
+
+──────────────────────────────────────────────────────────────
+ [5/11] .env file at repo root
+  ✓ PASS  .env found at <repo-root>/.env
+
+──────────────────────────────────────────────────────────────
+ [6/11] MongoDB container 'shigoto-coffee-db' running
+  ✗ FAIL  Container 'shigoto-coffee-db' is not running
+         → Start MongoDB: cd <repo-root> && docker compose up -d
+
+──────────────────────────────────────────────────────────────
+ [7/11] MongoDB connection ping
+  ⚠ SKIP  MongoDB container not running
+         Run Check 6 first: docker compose up -d
+
+──────────────────────────────────────────────────────────────
+ [8/11] backend/node_modules installed
+  ✓ PASS  backend/node_modules found (141 packages)
+
+──────────────────────────────────────────────────────────────
+ [9/11] TypeScript typecheck (npm run typecheck)
+  ✓ PASS  TypeScript typecheck passed (npm run typecheck)
+
+──────────────────────────────────────────────────────────────
+ [10/11] frontend/node_modules installed
+  ✓ PASS  frontend/node_modules found (67 packages)
+
+──────────────────────────────────────────────────────────────
+ [11/11] Port availability (5000 / 5173)
+  ✓ PASS  Port 5000 (backend) is free
+  ✓ PASS  Port 5173 (frontend (Vite)) is free
+
+╔══════════════════════════════════════════════════════════════╗
+║                     RESULTS SUMMARY                         ║
+╠══════════════════════════════════════════════════════════════╣
+║  Total: 12  | Pass: 9   | Fail: 2   | Skip: 1       ║
+╚══════════════════════════════════════════════════════════════╝
+  ⚠ 2 soft failure(s) — some services may not be running.
+    Start Docker services and re-run to resolve.
+

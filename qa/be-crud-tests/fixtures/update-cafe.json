@@ -1,0 +1,11 @@
+{
+  "description": {
+    "ja": "Updated QA test description",
+    "vi": "Updated QA test description"
+  },
+  "openingHours": {
+    "open": "07:00",
+    "close": "23:00"
+  },
+  "hashtags": ["wifi", "outlets", "quiet", "noTimeLimit"]
+}

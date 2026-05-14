@@ -1,0 +1,29 @@
+{
+  "name": {
+    "ja": "QA Test Cafe",
+    "vi": "QA Test Cafe"
+  },
+  "description": {
+    "ja": "Temporary cafe record for QA API tests.",
+    "vi": "Temporary cafe record for QA API tests."
+  },
+  "address": {
+    "ja": "1 QA Test Street, Hoan Kiem, Hanoi",
+    "vi": "1 QA Test Street, Hoan Kiem, Hanoi"
+  },
+  "district": "Hoan Kiem",
+  "openingHours": {
+    "open": "08:00",
+    "close": "22:00"
+  },
+  "isOpen": true,
+  "hashtags": ["wifi", "outlets", "quiet"],
+  "location": {
+    "type": "Point",
+    "coordinates": [105.8544, 21.0285]
+  },
+  "menu": [
+    { "name": "Test Espresso", "price": 35000 },
+    { "name": "Test Latte", "price": 50000 }
+  ]
+}
