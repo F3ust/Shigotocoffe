@@ -107,24 +107,14 @@ export default function Header() {
             {menuOpen && (
               <div className="absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
                 {isLoggedIn ? (
-                  <>
-                    <Link
-                      to="/profile"
-                      id="menu-info"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50"
-                    >
-                      <span>👤</span> {t("nav.info")}
-                    </Link>
-                    <button
-                      id="menu-logout"
-                      type="button"
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2 border-t border-gray-100 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50"
-                    >
-                      <span>🚪</span> {t("nav.logout")}
-                    </button>
-                  </>
+                  <button
+                    id="menu-logout"
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50"
+                  >
+                    <span>🚪</span> {t("nav.logout")}
+                  </button>
                 ) : (
                   <>
                     <Link

@@ -44,7 +44,13 @@
     "closed": "Đã đóng cửa",
     "hours": "Giờ mở cửa",
     "no_results": "Không tìm thấy quán nào",
-    "loading": "Đang tải..."
+    "loading": "Đang tải...",
+    "list_error": "Không tải được danh sách quán. Kiểm tra kết nối và thử lại.",
+    "retry": "Thử lại"
+  },
+  "errors": {
+    "not_found_title": "Không tìm thấy trang",
+    "not_found_body": "Trang bạn tìm không tồn tại hoặc đã được chuyển đi."
   },
   "cafeDetail": {
     "invalid_id": "Mã quán không hợp lệ.",

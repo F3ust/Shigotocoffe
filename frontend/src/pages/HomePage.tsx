@@ -10,18 +10,23 @@ export default function HomePage() {
   const { t } = useTranslation();
   const [cafes, setCafes] = useState<Cafe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [total, setTotal] = useState(0);
   const [params, setParams] = useState<CafeQueryParams>({});
   const [filterOpen, setFilterOpen] = useState(false);
 
   const loadCafes = useCallback(async (searchParams: CafeQueryParams) => {
     setLoading(true);
+    setLoadError(false);
     try {
       const response = await fetchCafes(searchParams);
       setCafes(response.data);
       setTotal(response.pagination.total);
     } catch (err) {
       console.error("Failed to load cafes:", err);
+      setLoadError(true);
+      setCafes([]);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
@@ -110,6 +115,21 @@ export default function HomePage() {
 
       {/* Cafe list — spec elements #13-#18 */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        {loadError && (
+          <div
+            role="alert"
+            className="mb-6 flex flex-col gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <p className="text-sm text-red-800">{t("cafe.list_error")}</p>
+            <button
+              type="button"
+              onClick={() => loadCafes(params)}
+              className="shrink-0 rounded-lg bg-sage-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sage-700"
+            >
+              {t("cafe.retry")}
+            </button>
+          </div>
+        )}
         <div className="mb-6 flex items-center gap-3">
           <h2 className="text-xl font-bold text-gray-900">
             {t("cafe.featured")}
