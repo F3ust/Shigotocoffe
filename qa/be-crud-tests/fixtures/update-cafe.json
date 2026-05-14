@@ -1,0 +1,11 @@
+{
+  "description": {
+    "ja": "更新されたQAテスト説明文",
+    "vi": "Mô tả QA Test đã được cập nhật"
+  },
+  "openingHours": {
+    "open": "07:00",
+    "close": "23:00"
+  },
+  "hashtags": ["wifi", "outlets", "quiet", "noTimeLimit"]
+}

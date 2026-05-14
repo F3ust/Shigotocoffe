@@ -1,0 +1,29 @@
+{
+  "name": {
+    "ja": "QAテストカフェ",
+    "vi": "QA Test Cafe"
+  },
+  "description": {
+    "ja": "これはQAテスト用の仮カフェです。実際の営業店舗ではありません。",
+    "vi": "Đây là quán cà phê giả dùng cho QA test. Không phải quán thực tế."
+  },
+  "address": {
+    "ja": "テスト通り1番地、ホアンキエム区、ハノイ",
+    "vi": "1 Phố Kiểm Thử, Hoàn Kiếm, Hà Nội"
+  },
+  "district": "Hoàn Kiếm",
+  "openingHours": {
+    "open": "08:00",
+    "close": "22:00"
+  },
+  "isOpen": true,
+  "hashtags": ["wifi", "outlets", "quiet"],
+  "location": {
+    "type": "Point",
+    "coordinates": [105.8544, 21.0285]
+  },
+  "menu": [
+    { "name": "Test Espresso", "price": 35000 },
+    { "name": "Test Latte", "price": 50000 }
+  ]
+}
