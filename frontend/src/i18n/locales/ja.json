@@ -44,11 +44,51 @@
     "closed": "閉店",
     "hours": "営業時間",
     "no_results": "カフェが見つかりませんでした",
-    "loading": "読み込み中..."
+    "loading": "読み込み中...",
+    "list_error": "カフェ一覧を読み込めませんでした。接続を確認して再試行してください。",
+    "retry": "再試行"
+  },
+  "errors": {
+    "not_found_title": "ページが見つかりません",
+    "not_found_body": "お探しのページは存在しないか、移動した可能性があります。"
+  },
+  "cafeDetail": {
+    "invalid_id": "このカフェIDは無効です。",
+    "not_found": "カフェが見つかりませんでした。",
+    "error_load": "読み込みに失敗しました。しばらくしてからもう一度お試しください。",
+    "back_home": "ホームに戻る",
+    "menu_heading": "メニュー",
+    "reviews_title": "レビュー",
+    "no_reviews": "まだレビューはありません。",
+    "anonymous": "匿名"
   },
   "footer": {
     "copyright": "© 2026 仕事コーヒー ハノイのワークカフェを探す。",
     "terms": "利用規約",
     "privacy": "プライバシーポリシー"
+  },
+  "auth": {
+    "login_title": "ログイン",
+    "login_subtitle": "メールアドレスとパスワードでログインしてください",
+    "signup_title": "新規登録",
+    "signup_subtitle": "アカウントを作成してカフェを見つけましょう",
+    "email": "メールアドレス",
+    "email_placeholder": "example@email.com",
+    "password": "パスワード",
+    "password_placeholder": "パスワードを入力",
+    "name": "お名前",
+    "name_placeholder": "山田太郎",
+    "confirm_password": "パスワード（確認）",
+    "confirm_password_placeholder": "もう一度入力",
+    "submit_login": "ログイン",
+    "submit_signup": "登録する",
+    "submitting": "送信中…",
+    "no_account": "アカウントをお持ちでないですか？",
+    "have_account": "すでにアカウントをお持ちですか？",
+    "link_to_signup": "新規登録",
+    "link_to_login": "ログイン",
+    "error_required": "この項目は必須です",
+    "error_password_mismatch": "パスワードが一致しません",
+    "error_generic": "エラーが発生しました。もう一度お試しください。"
   }
 }

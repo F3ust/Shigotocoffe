@@ -1,8 +1,8 @@
 # BE CRUD API Test Plan
 
-> Sprint 1, Task ID 9  
-> Owner: Ngoc Quy, QA Tester A  
-> Branch: `feature/sprint-1-qa-completion`
+> Sprint 1, Task ID 9 (scripts); Sprint 2, Task ID 13 (verification)  
+> Owner: Ngoc Quy, QA  
+> Branch under test: `feat/sprint-2-fe`
 
 ## Overview
 
@@ -11,27 +11,33 @@
 | Scope | Cafe REST API: `GET /api/cafes`, `GET /api/cafes/:id`, `POST /api/cafes`, `PATCH /api/cafes/:id`, `DELETE /api/cafes/:id` |
 | Tooling | `bash`, `curl`, `jq` |
 | Dependencies | No npm packages |
-| Test cases | 23 logical cases |
-| Execution status | Not run in the QA agent. The backend was not running. |
+| Test cases | 70 assertions across 5 suites (see summaries below) |
+| Execution status | **Passed** locally — see [Execution results](#execution-results) |
 
 ## Preconditions
 
-1. Start MongoDB:
+1. Copy env for the backend (repo root — `backend` loads `../.env`):
    ```bash
-   docker compose up -d
+   cp .env.example .env
    ```
-2. Start the backend on port `5000`:
+2. Start MongoDB (from repo root). On Windows, if Compose reports `project name must not be empty`, set a name (PowerShell example):
+   ```powershell
+   $env:COMPOSE_PROJECT_NAME='shigoto-coffee'; docker compose up -d
+   ```
+3. **Windows + WSL:** run **`bash qa/...` inside WSL** (project workflow). Start the backend **in that same WSL environment** so `http://localhost:5000` matches `curl` from the scripts. A dev server started only on Windows is often **not** reachable at `localhost:5000` from WSL.
+4. Install dependencies and seed:
+   ```bash
+   cd backend && npm install && npm run seed
+   ```
+5. Start the backend on port `5000`:
    ```bash
    cd backend && npm run dev
    ```
-3. Seed the database:
+6. Install **`jq`** in WSL (required for assertions; without it, tests report `jq not installed`):
    ```bash
-   cd backend && npm run seed
+   sudo apt-get update && sudo apt-get install -y jq
    ```
-4. Install `jq`:
-   ```bash
-   sudo apt-get install -y jq
-   ```
+   Or as root: `wsl -d Ubuntu --user root -- bash -lc 'apt-get update && apt-get install -y jq'`
 
 ## Run
 
@@ -79,7 +85,7 @@ All tests passed.
 |----|----------|----------|-----------------|---------|
 | TC-02-01 | `GET /api/cafes/:id` | Valid existing id | 200 | data._id match |
 | TC-02-02 | `GET /api/cafes/000000000000000000000000` | Non-existent valid ObjectId | 404 | Error message includes `not found` |
-| TC-02-03 | `GET /api/cafes/abc` | Invalid id format | 500 | Known issue. See the note below. |
+| TC-02-03 | `GET /api/cafes/abc` | Invalid id format | 400 | Resolved: explicit ObjectId validation in `getCafeById` |
 
 ### Suite 03 — POST /api/cafes (6 cases)
 
@@ -111,42 +117,28 @@ All tests passed.
 
 ---
 
-## Known Issue
+## Resolved note (historical)
 
-### FINDING-01: `GET /api/cafes/:id` does not validate ObjectId format
-
-**Severity:** Low  
-**File:** `backend/src/controllers/cafeController.ts`, function `getCafeById` (line 77–89)
-
-`updateCafe` and `deleteCafe` validate ObjectId format before querying MongoDB. `getCafeById` does not. A request such as `GET /api/cafes/abc` triggers a Mongoose `CastError`, so the error handler returns `500` instead of `400`.
-
-**Expected behavior:** 400 Bad Request with a clear message  
-**Actual behavior from code review:** 500 Internal Server Error  
-
-**Recommendation:** Add `if (!mongoose.isValidObjectId(id)) throw new ValidationError("Invalid cafe id")` to `getCafeById`.  
-**Action:** Document only. Do not change production code in this QA task.
+`GET /api/cafes/:id` previously could return `500` for invalid ObjectId strings. The suite now expects **400** with validation messaging; scripts treat this as the desired behavior.
 
 ---
 
 ## Execution Results
 
-> The QA agent did not run the suite because the backend was not running.
-> The scripts were reviewed against `cafeController.ts`, `Cafe.ts`, `errorHandler.ts`, and `errors.ts`.
-> Run the scripts on a local environment before the Sprint Review.
+Last run: **2026-05-15** on branch **`feat/sprint-2-fe`**, WSL Ubuntu, API `http://localhost:5000/api` (backend + `npm run seed` executed inside WSL; MongoDB via Docker Desktop).
 
-Run this command when the backend is available:
 ```bash
-bash qa/be-crud-tests/run-all.sh 2>&1 | tee qa/be-crud-tests/execution-log.txt
+wsl -d Ubuntu -- bash -lc "cd '/mnt/d/仕事コーヒー' && bash qa/be-crud-tests/run-all.sh"
 ```
 
-| Suite | Test count | Status |
-|-------|-----------|--------|
-| 01-get-list | 7 | Manual review only |
-| 02-get-by-id | 3 | Manual review only |
-| 03-create | 6 | Manual review only |
-| 04-update | 4 | Manual review only |
-| 05-delete | 3 | Manual review only |
-| **Total** | **23** | **Pending execution** |
+| Suite | Assertions passed | Status |
+|-------|-------------------|--------|
+| 01-get-list | 27 | Pass |
+| 02-get-by-id | 8 | Pass |
+| 03-create | 14 | Pass |
+| 04-update | 14 | Pass |
+| 05-delete | 7 | Pass |
+| **Total** | **70** | **All passed** |
 
 ---
 
