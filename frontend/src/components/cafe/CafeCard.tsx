@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Cafe } from "../../types/cafe";
 
@@ -99,12 +100,13 @@ export default function CafeCard({ cafe }: CafeCardProps) {
               </span>
             ))}
           </div>
-          <button
+          <Link
+            to={`/cafes/${cafe._id}`}
             id={`view-${cafe._id}`}
             className="rounded-lg bg-sage-600 px-5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sage-700"
           >
             {t("cafe.view")}
-          </button>
+          </Link>
         </div>
       </div>
     </div>

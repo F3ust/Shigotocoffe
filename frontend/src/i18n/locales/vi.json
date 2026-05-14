@@ -46,9 +46,43 @@
     "no_results": "Không tìm thấy quán nào",
     "loading": "Đang tải..."
   },
+  "cafeDetail": {
+    "invalid_id": "Mã quán không hợp lệ.",
+    "not_found": "Không tìm thấy quán.",
+    "error_load": "Không tải được dữ liệu. Vui lòng thử lại sau.",
+    "back_home": "Về trang chủ",
+    "menu_heading": "Menu",
+    "reviews_title": "Đánh giá",
+    "no_reviews": "Chưa có đánh giá nào.",
+    "anonymous": "Ẩn danh"
+  },
   "footer": {
     "copyright": "© 2026 仕事コーヒー. Tìm quán cafe để làm việc tại Hà Nội.",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy"
+  },
+  "auth": {
+    "login_title": "Đăng nhập",
+    "login_subtitle": "Đăng nhập bằng email và mật khẩu",
+    "signup_title": "Đăng ký",
+    "signup_subtitle": "Tạo tài khoản để khám phá quán cà phê",
+    "email": "Email",
+    "email_placeholder": "vidu@email.com",
+    "password": "Mật khẩu",
+    "password_placeholder": "Nhập mật khẩu",
+    "name": "Họ tên",
+    "name_placeholder": "Nguyễn Văn A",
+    "confirm_password": "Xác nhận mật khẩu",
+    "confirm_password_placeholder": "Nhập lại mật khẩu",
+    "submit_login": "Đăng nhập",
+    "submit_signup": "Đăng ký",
+    "submitting": "Đang gửi…",
+    "no_account": "Chưa có tài khoản?",
+    "have_account": "Đã có tài khoản?",
+    "link_to_signup": "Đăng ký",
+    "link_to_login": "Đăng nhập",
+    "error_required": "Trường này là bắt buộc",
+    "error_password_mismatch": "Mật khẩu không khớp",
+    "error_generic": "Đã xảy ra lỗi. Vui lòng thử lại."
   }
 }

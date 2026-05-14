@@ -32,8 +32,9 @@ export default function LanguageToggle() {
     <div className="relative" ref={ref}>
       <button
         id="language-toggle"
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 rounded-md border border-sage-300/50 px-3 py-1.5 text-sm font-medium text-sage-700 transition-colors hover:bg-sage-50"
+        className="flex h-9 items-center gap-1.5 rounded-md border border-sage-300 px-3 text-sm font-medium text-sage-700 transition-colors hover:bg-sage-50"
       >
         {t("nav.language")}
         <span className={`text-xs transition-transform ${isOpen ? "rotate-180" : ""}`}>
