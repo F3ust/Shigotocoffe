@@ -16,11 +16,10 @@ TOTAL_FAIL=0
 
 run_suite() {
   local script="$1"
-  if bash "$script"; then
-    :
-  else
-    echo "Suite failed: $script"
-  fi
+  bash "$script" || {
+    echo "Suite failed: $script" >&2
+    exit 1
+  }
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/../be-crud-tests/lib/assert.sh"
   TOTAL_PASS=$((TOTAL_PASS + PASS_COUNT))
