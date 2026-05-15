@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import AuthLogoBlock from "../components/auth/AuthLogoBlock";
 import { getAuthErrorMessage, loginUser } from "../services/api";
 
 export default function LoginPage() {
@@ -14,6 +15,14 @@ export default function LoginPage() {
   }>({});
   const [apiError, setApiError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  function handleBack() {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  }
 
   function validate(): boolean {
     const next: { email?: string; password?: string } = {};
@@ -43,6 +52,17 @@ export default function LoginPage() {
     <div className="min-h-[calc(100vh-8rem)] bg-cream-100/80 px-4 py-12 sm:py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="rounded-xl border border-sage-200/60 bg-white p-6 shadow-sm sm:p-8">
+          <button
+            type="button"
+            id="login-back"
+            onClick={handleBack}
+            className="mb-2 text-sm font-medium text-sage-700 hover:text-sage-900"
+          >
+            ← {t("auth.back")}
+          </button>
+
+          <AuthLogoBlock />
+
           <h1 className="text-center text-2xl font-bold text-sage-800">
             {t("auth.login_title")}
           </h1>
@@ -102,6 +122,16 @@ export default function LoginPage() {
               )}
             </div>
 
+            <div className="text-right">
+              <a
+                id="login-forgot-password"
+                href="#"
+                className="text-sm font-medium text-sage-700 underline-offset-2 hover:underline"
+              >
+                {t("auth.forgot_password")}
+              </a>
+            </div>
+
             <button
               type="submit"
               disabled={submitting}
@@ -116,6 +146,16 @@ export default function LoginPage() {
             <Link to="/register" className="font-semibold text-sage-700 underline-offset-2 hover:underline">
               {t("auth.link_to_signup")}
             </Link>
+          </p>
+
+          <p className="mt-4 text-center text-xs text-sage-500">
+            <a id="login-terms" href="#" className="underline-offset-2 hover:underline">
+              {t("auth.terms")}
+            </a>
+            <span className="mx-2">·</span>
+            <a id="login-privacy" href="#" className="underline-offset-2 hover:underline">
+              {t("auth.privacy")}
+            </a>
           </p>
         </div>
       </div>

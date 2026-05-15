@@ -5,8 +5,10 @@ import LanguageToggle from "./LanguageToggle";
 import {
   AUTH_TOKEN_CHANGE_EVENT,
   AUTH_TOKEN_KEY,
+  AUTH_USER_KEY,
   getAuthToken,
-  setAuthToken,
+  getAuthUser,
+  logoutUser,
 } from "../../services/api";
 
 export default function Header() {
@@ -15,30 +17,42 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const syncLoggedIn = useCallback(() => {
-    return getAuthToken() !== null;
+  const syncAuthState = useCallback(() => {
+    return {
+      loggedIn: getAuthToken() !== null,
+      name: getAuthUser()?.name ?? null,
+    };
   }, []);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(syncLoggedIn);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => syncAuthState().loggedIn);
+  const [accountName, setAccountName] = useState<string | null>(() => syncAuthState().name);
 
   useEffect(() => {
-    function applyTokenState() {
-      setIsLoggedIn(syncLoggedIn());
+    function applyAuthState() {
+      const s = syncAuthState();
+      setIsLoggedIn(s.loggedIn);
+      setAccountName(s.name);
     }
 
-    applyTokenState();
+    applyAuthState();
 
     function onStorage(e: StorageEvent) {
-      if (e.key === AUTH_TOKEN_KEY || e.key === null) applyTokenState();
+      if (
+        e.key === AUTH_TOKEN_KEY ||
+        e.key === AUTH_USER_KEY ||
+        e.key === null
+      ) {
+        applyAuthState();
+      }
     }
 
     window.addEventListener("storage", onStorage);
-    window.addEventListener(AUTH_TOKEN_CHANGE_EVENT, applyTokenState);
+    window.addEventListener(AUTH_TOKEN_CHANGE_EVENT, applyAuthState);
     return () => {
       window.removeEventListener("storage", onStorage);
-      window.removeEventListener(AUTH_TOKEN_CHANGE_EVENT, applyTokenState);
+      window.removeEventListener(AUTH_TOKEN_CHANGE_EVENT, applyAuthState);
     };
-  }, [syncLoggedIn]);
+  }, [syncAuthState]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -51,7 +65,7 @@ export default function Header() {
   }, []);
 
   function handleLogout() {
-    setAuthToken(null);
+    logoutUser();
     setMenuOpen(false);
     navigate("/", { replace: true });
   }
@@ -105,16 +119,26 @@ export default function Header() {
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
+              <div className="absolute right-0 top-full z-50 mt-2 min-w-[11rem] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
                 {isLoggedIn ? (
-                  <button
-                    id="menu-logout"
-                    type="button"
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50"
-                  >
-                    <span>🚪</span> {t("nav.logout")}
-                  </button>
+                  <>
+                    {accountName && (
+                      <div
+                        id="menu-account-name"
+                        className="border-b border-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-800"
+                      >
+                        {accountName}
+                      </div>
+                    )}
+                    <button
+                      id="menu-logout"
+                      type="button"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50"
+                    >
+                      <span>🚪</span> {t("nav.logout")}
+                    </button>
+                  </>
                 ) : (
                   <>
                     <Link
