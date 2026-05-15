@@ -16,25 +16,24 @@ const COMMENTS: string[] = [
   "Ideal spot for afternoon coding sessions.",
 ];
 
-/** Several seeded reviews per café from the demo user (see `seed.ts`). */
+/** One seeded review per café from the demo user (unique user+cafe in Review). */
 export function buildReviewSeeds(
   cafeIds: Types.ObjectId[],
   userId: Types.ObjectId
 ): ReviewSeedInput[] {
   const rows: ReviewSeedInput[] = [];
-  for (const cafeId of cafeIds) {
-    for (let i = 0; i < 3; i++) {
-      const comment = COMMENTS[i % COMMENTS.length];
-      if (comment === undefined) {
-        throw new Error("COMMENT array must not be empty");
-      }
-      rows.push({
-        user: userId,
-        cafe: cafeId,
-        rating: 3 + (i % 3),
-        comment,
-      });
+  for (let idx = 0; idx < cafeIds.length; idx++) {
+    const cafeId = cafeIds[idx]!;
+    const comment = COMMENTS[idx % COMMENTS.length];
+    if (comment === undefined) {
+      throw new Error("COMMENTS must not be empty");
     }
+    rows.push({
+      user: userId,
+      cafe: cafeId,
+      rating: 3 + (idx % 3),
+      comment,
+    });
   }
   return rows;
 }
