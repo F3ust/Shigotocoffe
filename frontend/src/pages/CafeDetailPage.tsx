@@ -3,8 +3,7 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CafeDetailLayout from "../components/cafe/CafeDetailLayout";
-import ReviewList from "../components/cafe/ReviewList";
-import { fetchCafeById, fetchReviewsForCafe } from "../services/api";
+import { fetchCafeById, fetchReviewsForCafe, getAuthToken } from "../services/api";
 import type { Cafe } from "../types/cafe";
 import type { ReviewDTO } from "../types/review";
 
@@ -99,9 +98,14 @@ export default function CafeDetailPage() {
     );
   }
 
+  const isLoggedIn = getAuthToken() !== null;
+
   return (
-    <CafeDetailLayout cafe={state.cafe} lang={lang}>
-      <ReviewList reviews={state.reviews} />
-    </CafeDetailLayout>
+    <CafeDetailLayout
+      cafe={state.cafe}
+      lang={lang}
+      reviews={state.reviews}
+      isLoggedIn={isLoggedIn}
+    />
   );
 }

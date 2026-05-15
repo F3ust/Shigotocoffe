@@ -61,6 +61,15 @@
     "back_home": "ホームに戻る",
     "menu_heading": "メニュー",
     "reviews_title": "レビュー",
+    "comments_heading": "コメント（{{count}}）",
+    "section_intro": "紹介",
+    "section_hours": "営業時間",
+    "section_address": "住所",
+    "section_status": "営業状態",
+    "section_tags": "ハッシュタグ",
+    "status_open_detail": "現在営業中です。",
+    "status_closed_detail": "現在閉店中です。",
+    "rate_cta": "レビューする",
     "no_reviews": "まだレビューはありません。",
     "anonymous": "匿名"
   },
@@ -98,6 +107,10 @@
     "back": "戻る",
     "role": "アカウントの種類",
     "role_user": "利用者",
-    "role_owner": "店舗オーナー"
+    "role_owner": "店舗オーナー",
+    "show_password": "パスワードを表示",
+    "hide_password": "パスワードを隠す",
+    "show_password_short": "表示",
+    "hide_password_short": "非表示"
   }
 }
