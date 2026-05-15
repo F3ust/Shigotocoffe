@@ -74,14 +74,14 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-sage-200/60 bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sage-600 text-white">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 8h1a4 4 0 110 8h-1" />
-              <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" />
-              <line x1="6" y1="2" x2="6" y2="4" />
-              <line x1="10" y1="2" x2="10" y2="4" />
-              <line x1="14" y1="2" x2="14" y2="4" />
-            </svg>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-sage-200 bg-white">
+            <img
+              src="/logo-mark.svg"
+              alt=""
+              className="h-full w-full object-contain p-1.5"
+              width={40}
+              height={40}
+            />
           </div>
           <div className="leading-tight">
             <span className="text-lg font-bold text-sage-800">

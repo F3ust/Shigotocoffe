@@ -61,6 +61,15 @@
     "back_home": "Về trang chủ",
     "menu_heading": "Menu",
     "reviews_title": "Đánh giá",
+    "comments_heading": "Bình luận ({{count}})",
+    "section_intro": "Giới thiệu",
+    "section_hours": "Giờ mở cửa",
+    "section_address": "Địa chỉ",
+    "section_status": "Trạng thái quán",
+    "section_tags": "Hashtag",
+    "status_open_detail": "Quán đang mở cửa.",
+    "status_closed_detail": "Quán đã đóng cửa.",
+    "rate_cta": "Đánh giá",
     "no_reviews": "Chưa có đánh giá nào.",
     "anonymous": "Ẩn danh"
   },
@@ -98,6 +107,10 @@
     "back": "Quay lại",
     "role": "Loại tài khoản",
     "role_user": "Người dùng",
-    "role_owner": "Chủ quán"
+    "role_owner": "Chủ quán",
+    "show_password": "Hiển thị mật khẩu",
+    "hide_password": "Ẩn mật khẩu",
+    "show_password_short": "Hiện",
+    "hide_password_short": "Ẩn"
   }
 }
