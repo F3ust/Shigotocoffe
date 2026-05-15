@@ -22,11 +22,23 @@ function assertBodyString(
   return v.trim();
 }
 
+function parseRole(body: Record<string, unknown>): "user" | "owner" {
+  const raw = body.role;
+  if (raw === undefined || raw === null || raw === "") return "user";
+  if (typeof raw !== "string") {
+    throw new ValidationError('"role" must be a string');
+  }
+  const role = raw.trim().toLowerCase();
+  if (role === "user" || role === "owner") return role;
+  throw new ValidationError('"role" must be "user" or "owner"');
+}
+
 export async function register(req: Request, res: Response): Promise<void> {
   const body = req.body as Record<string, unknown>;
   const name = assertBodyString(body, "name");
   const email = assertBodyString(body, "email").toLowerCase();
   const password = assertBodyString(body, "password");
+  const role = parseRole(body);
 
   if (password.length < 6) {
     throw new ValidationError("Password must be at least 6 characters");
@@ -42,7 +54,7 @@ export async function register(req: Request, res: Response): Promise<void> {
     name,
     email,
     password: hash,
-    role: "user",
+    role,
   });
 
   const signOptions = {
