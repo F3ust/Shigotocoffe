@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CAFE_HASHTAG_IDS } from "../../constants/cafeHashtags";
 
 interface FilterPanelProps {
   onApply: (filters: { minRating: string; tags: string[] }) => void;
@@ -21,13 +22,12 @@ const RATING_OPTIONS = [
 
 export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelProps) {
   const { t } = useTranslation();
-  const [selectedDistances, setSelectedDistances] = useState<string[]>([]);
   const [minRating, setMinRating] = useState("");
-  const [selectedTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  function toggleDistance(d: string) {
-    setSelectedDistances((prev) =>
-      prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
+  function toggleTag(tagId: string) {
+    setSelectedTags((prev) =>
+      prev.includes(tagId) ? prev.filter((x) => x !== tagId) : [...prev, tagId]
     );
   }
 
@@ -36,36 +36,60 @@ export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelPro
   }
 
   function handleClear() {
-    setSelectedDistances([]);
     setMinRating("");
+    setSelectedTags([]);
     onClear();
   }
 
   if (!isOpen) return null;
 
+  const distanceComingSoon = t("filter.distance_coming_soon");
+
   return (
     <div className="absolute right-0 top-full z-40 mt-2 w-72 rounded-xl border border-gray-200 bg-white p-5 shadow-xl">
-      {/* Header */}
       <h3 className="mb-4 text-base font-bold text-gray-800">
         {t("filter.title")}
       </h3>
 
-      {/* Distance section — spec element #12 */}
-      <div className="mb-4 space-y-2">
+      <div className="mb-4 space-y-2" title={distanceComingSoon}>
+        <h4 className="text-sm font-bold text-gray-500">
+          {t("filter.distance")}
+        </h4>
         {DISTANCE_OPTIONS.map((key) => (
-          <label key={key} className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-700">
+          <label
+            key={key}
+            className="flex cursor-not-allowed items-center gap-2.5 text-sm text-gray-400"
+          >
             <input
               type="checkbox"
-              checked={selectedDistances.includes(key)}
-              onChange={() => toggleDistance(key)}
-              className="h-4 w-4 rounded border-gray-300 text-sage-600 accent-sage-600"
+              checked={false}
+              disabled
+              className="h-4 w-4 rounded border-gray-300 accent-sage-600 disabled:opacity-50"
             />
             {t(`filter.${key}`)}
           </label>
         ))}
       </div>
 
-      {/* Rating section — spec element #12 */}
+      <div className="mb-4 space-y-2">
+        <h4 className="text-sm font-bold text-gray-800">{t("filter.hashtags")}</h4>
+        {CAFE_HASHTAG_IDS.map((id) => (
+          <label
+            key={id}
+            className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-700"
+          >
+            <input
+              type="checkbox"
+              id={`filter-tag-${id}`}
+              checked={selectedTags.includes(id)}
+              onChange={() => toggleTag(id)}
+              className="h-4 w-4 rounded border-gray-300 text-sage-600 accent-sage-600"
+            />
+            {t(`filter.${id}`)}
+          </label>
+        ))}
+      </div>
+
       <div className="mb-5">
         <h4 className="mb-2 text-sm font-bold text-gray-800">
           {t("filter.rating")}
@@ -86,7 +110,6 @@ export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelPro
         </div>
       </div>
 
-      {/* Action buttons — spec Áp dụng / Hủy bỏ */}
       <div className="flex gap-2 border-t border-gray-100 pt-4">
         <button
           id="filter-apply"
