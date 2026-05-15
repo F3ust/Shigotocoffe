@@ -34,7 +34,9 @@
     "noTimeLimit": "Không giới hạn thời gian",
     "japanese": "Đồ Nhật",
     "apply": "Áp dụng",
-    "clear": "Hủy bỏ"
+    "clear": "Hủy bỏ",
+    "hashtags": "Hashtag",
+    "distance_coming_soon": "Lọc theo khoảng cách sẽ có trong bản cập nhật tới"
   },
   "cafe": {
     "featured": "Quán nổi bật",
@@ -89,6 +91,13 @@
     "link_to_login": "Đăng nhập",
     "error_required": "Trường này là bắt buộc",
     "error_password_mismatch": "Mật khẩu không khớp",
-    "error_generic": "Đã xảy ra lỗi. Vui lòng thử lại."
+    "error_generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "forgot_password": "Quên mật khẩu?",
+    "terms": "Điều khoản",
+    "privacy": "Bảo mật",
+    "back": "Quay lại",
+    "role": "Loại tài khoản",
+    "role_user": "Người dùng",
+    "role_owner": "Chủ quán"
   }
 }

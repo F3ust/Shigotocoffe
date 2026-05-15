@@ -4,6 +4,9 @@ import type { CafeReviewsResponse } from "../types/review";
 
 export const AUTH_TOKEN_KEY = "shigoto_auth_token";
 
+/** Persisted after successful login/register (name, email, role). Cleared with token on logout. */
+export const AUTH_USER_KEY = "shigoto_auth_user";
+
 /** Same-tab updates after login/logout (storage event only fires in other tabs). */
 export const AUTH_TOKEN_CHANGE_EVENT = "shigoto-auth-token-change";
 
@@ -45,6 +48,7 @@ export function setAuthToken(token: string | null): void {
   try {
     if (token === null || token === "") {
       localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem(AUTH_USER_KEY);
     } else {
       localStorage.setItem(AUTH_TOKEN_KEY, token);
     }
@@ -52,6 +56,55 @@ export function setAuthToken(token: string | null): void {
   } catch {
     /* ignore quota / private mode */
   }
+}
+
+export function setAuthUser(user: AuthUser | null): void {
+  try {
+    if (user === null) {
+      localStorage.removeItem(AUTH_USER_KEY);
+    } else {
+      localStorage.setItem(
+        AUTH_USER_KEY,
+        JSON.stringify({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        })
+      );
+    }
+    window.dispatchEvent(new Event(AUTH_TOKEN_CHANGE_EVENT));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getAuthUser(): AuthUser | null {
+  try {
+    const raw = localStorage.getItem(AUTH_USER_KEY);
+    if (!raw || raw.trim() === "") return null;
+    const parsed = JSON.parse(raw) as Partial<AuthUser>;
+    if (
+      typeof parsed._id === "string" &&
+      typeof parsed.name === "string" &&
+      typeof parsed.email === "string"
+    ) {
+      return {
+        _id: parsed._id,
+        name: parsed.name,
+        email: parsed.email,
+        role: typeof parsed.role === "string" ? parsed.role : "user",
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Clears JWT and stored user profile (same-tab listeners via AUTH_TOKEN_CHANGE_EVENT). */
+export function logoutUser(): void {
+  setAuthToken(null);
 }
 
 api.interceptors.request.use((config) => {
@@ -88,6 +141,10 @@ export async function loginUser(body: {
   const { data } = await api.post<AuthSuccessBody>("/auth/login", body);
   const payload = data.data;
   setAuthToken(payload.token);
+  setAuthUser({
+    ...payload.user,
+    role: payload.user.role ?? "user",
+  });
   return payload;
 }
 
@@ -95,10 +152,15 @@ export async function registerUser(body: {
   name: string;
   email: string;
   password: string;
+  role: "user" | "owner";
 }): Promise<{ token: string; user: AuthUser }> {
   const { data } = await api.post<AuthSuccessBody>("/auth/register", body);
   const payload = data.data;
   setAuthToken(payload.token);
+  setAuthUser({
+    ...payload.user,
+    role: payload.user.role ?? "user",
+  });
   return payload;
 }
 

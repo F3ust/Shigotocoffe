@@ -34,7 +34,9 @@
     "noTimeLimit": "時間制限なし",
     "japanese": "日本系",
     "apply": "適用",
-    "clear": "取消"
+    "clear": "取消",
+    "hashtags": "ハッシュタグ",
+    "distance_coming_soon": "距離での絞り込みは近日対応予定です"
   },
   "cafe": {
     "featured": "おすすめカフェ",
@@ -89,6 +91,13 @@
     "link_to_login": "ログイン",
     "error_required": "この項目は必須です",
     "error_password_mismatch": "パスワードが一致しません",
-    "error_generic": "エラーが発生しました。もう一度お試しください。"
+    "error_generic": "エラーが発生しました。もう一度お試しください。",
+    "forgot_password": "パスワードをお忘れですか？",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "back": "戻る",
+    "role": "アカウントの種類",
+    "role_user": "利用者",
+    "role_owner": "店舗オーナー"
   }
 }

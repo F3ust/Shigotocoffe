@@ -100,21 +100,8 @@ export default function CafeDetailPage() {
   }
 
   return (
-    <>
-      <div className="border-b border-sage-100 bg-cream-200">
-        <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6">
-          <Link
-            to="/"
-            className="text-sm font-semibold text-sage-700 transition-colors hover:text-sage-900"
-          >
-            ← {t("cafeDetail.back_home")}
-          </Link>
-        </div>
-      </div>
-
-      <CafeDetailLayout cafe={state.cafe} lang={lang}>
-        <ReviewList reviews={state.reviews} />
-      </CafeDetailLayout>
-    </>
+    <CafeDetailLayout cafe={state.cafe} lang={lang}>
+      <ReviewList reviews={state.reviews} />
+    </CafeDetailLayout>
   );
 }

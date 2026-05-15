@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import AuthLogoBlock from "../components/auth/AuthLogoBlock";
 import { getAuthErrorMessage, registerUser } from "../services/api";
 
 export default function SignupPage() {
@@ -10,6 +11,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState<"user" | "owner">("user");
   const [fieldErrors, setFieldErrors] = useState<{
     name?: string;
     email?: string;
@@ -18,6 +20,14 @@ export default function SignupPage() {
   }>({});
   const [apiError, setApiError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  function handleBack() {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  }
 
   function validate(): boolean {
     const next: {
@@ -41,7 +51,12 @@ export default function SignupPage() {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      await registerUser({ name: name.trim(), email: email.trim(), password });
+      await registerUser({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        role,
+      });
       navigate("/", { replace: true });
     } catch (err) {
       const msg = getAuthErrorMessage(err);
@@ -55,6 +70,17 @@ export default function SignupPage() {
     <div className="min-h-[calc(100vh-8rem)] bg-cream-100/80 px-4 py-12 sm:py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="rounded-xl border border-sage-200/60 bg-white p-6 shadow-sm sm:p-8">
+          <button
+            type="button"
+            id="signup-back"
+            onClick={handleBack}
+            className="mb-2 text-sm font-medium text-sage-700 hover:text-sage-900"
+          >
+            ← {t("auth.back")}
+          </button>
+
+          <AuthLogoBlock />
+
           <h1 className="text-center text-2xl font-bold text-sage-800">
             {t("auth.signup_title")}
           </h1>
@@ -112,6 +138,21 @@ export default function SignupPage() {
               {fieldErrors.email && (
                 <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
               )}
+            </div>
+
+            <div>
+              <label htmlFor="signup-role" className="block text-sm font-medium text-gray-700">
+                {t("auth.role")}
+              </label>
+              <select
+                id="signup-role"
+                value={role}
+                onChange={(e) => setRole(e.target.value as "user" | "owner")}
+                className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm focus:border-sage-500 focus:outline-none focus:ring-2 focus:ring-sage-500/20"
+              >
+                <option value="user">{t("auth.role_user")}</option>
+                <option value="owner">{t("auth.role_owner")}</option>
+              </select>
             </div>
 
             <div>
@@ -174,6 +215,16 @@ export default function SignupPage() {
             <Link to="/login" className="font-semibold text-sage-700 underline-offset-2 hover:underline">
               {t("auth.link_to_login")}
             </Link>
+          </p>
+
+          <p className="mt-4 text-center text-xs text-sage-500">
+            <a id="signup-terms" href="#" className="underline-offset-2 hover:underline">
+              {t("auth.terms")}
+            </a>
+            <span className="mx-2">·</span>
+            <a id="signup-privacy" href="#" className="underline-offset-2 hover:underline">
+              {t("auth.privacy")}
+            </a>
           </p>
         </div>
       </div>
