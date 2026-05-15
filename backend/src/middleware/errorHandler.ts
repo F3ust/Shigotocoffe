@@ -1,6 +1,19 @@
 import { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
 import { AppError } from "../utils/errors";
 import { config } from "../config";
+
+function isMongoConnectivityError(err: unknown): boolean {
+  if (err instanceof mongoose.Error.MongooseServerSelectionError) return true;
+  if (err instanceof mongoose.mongo.MongoNetworkError) return true;
+  if (typeof err !== "object" || err === null) return false;
+  const name = (err as { name?: string }).name;
+  return (
+    name === "MongoServerSelectionError" ||
+    name === "MongoNetworkError" ||
+    name === "MongoNotConnectedError"
+  );
+}
 
 export function errorHandler(
   err: Error,
@@ -12,8 +25,18 @@ export function errorHandler(
     res.status(err.statusCode).json({
       status: "error",
       message: err.message,
-      ...("errors" in err ? { errors: (err as any).errors } : {}),
+      ...("errors" in err ? { errors: (err as { errors?: unknown }).errors } : {}),
     });
+    return;
+  }
+
+  if (isMongoConnectivityError(err)) {
+    console.error("Database unavailable:", err);
+    const message =
+      config.nodeEnv === "production"
+        ? "Service temporarily unavailable"
+        : "Database unavailable. Start MongoDB (docker compose -p shigoto-coffee up -d), check MONGODB_URI in .env, then npm run seed in backend.";
+    res.status(503).json({ status: "error", message });
     return;
   }
 

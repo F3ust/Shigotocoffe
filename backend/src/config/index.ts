@@ -26,6 +26,9 @@ export const config: AppConfig = {
   ),
   nodeEnv: requireEnv("NODE_ENV", "development"),
   corsOrigin: requireEnv("CORS_ORIGIN", "http://localhost:5173"),
-  jwtSecret: requireEnv("JWT_SECRET"),
+  jwtSecret: requireEnv(
+    "JWT_SECRET",
+    process.env.NODE_ENV === "production" ? undefined : "change-me-in-production"
+  ),
   jwtExpiresIn: requireEnv("JWT_EXPIRES_IN", "7d"),
 };
