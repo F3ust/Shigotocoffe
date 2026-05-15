@@ -4,6 +4,15 @@ import { Cafe } from "../models/Cafe";
 import { Review } from "../models/Review";
 import { NotFoundError, ValidationError } from "../utils/errors";
 
+const VALID_CAFE_HASHTAGS = [
+  "wifi",
+  "outlets",
+  "quiet",
+  "japanese",
+  "noTimeLimit",
+] as const;
+type CafeHashtag = (typeof VALID_CAFE_HASHTAGS)[number];
+
 interface CafeQueryParams {
   q?: string;
   district?: string;
@@ -46,7 +55,14 @@ export async function getCafes(req: Request, res: Response): Promise<void> {
 
   // Tags filter: comma-separated, all must be present
   if (tags) {
-    const tagList = tags.split(",").map((t) => t.trim());
+    const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean);
+    for (const tag of tagList) {
+      if (!VALID_CAFE_HASHTAGS.includes(tag as CafeHashtag)) {
+        throw new ValidationError(
+          `Invalid hashtag "${tag}" in tags filter. Allowed: ${VALID_CAFE_HASHTAGS.join(", ")}`
+        );
+      }
+    }
     filter.hashtags = { $all: tagList };
   }
 
@@ -166,23 +182,14 @@ export async function createCafe(req: Request, res: Response): Promise<void> {
     throw new ValidationError('"openingHours.close" must be a valid HH:mm string');
   }
 
-  const VALID_HASHTAGS = [
-    "wifi",
-    "outlets",
-    "quiet",
-    "japanese",
-    "noTimeLimit",
-  ] as const;
-  type Hashtag = (typeof VALID_HASHTAGS)[number];
-
   if (body.hashtags !== undefined) {
     if (!Array.isArray(body.hashtags)) {
       throw new ValidationError('"hashtags" must be an array');
     }
     for (const tag of body.hashtags as unknown[]) {
-      if (!VALID_HASHTAGS.includes(tag as Hashtag)) {
+      if (!VALID_CAFE_HASHTAGS.includes(tag as CafeHashtag)) {
         throw new ValidationError(
-          `Invalid hashtag "${String(tag)}". Allowed: ${VALID_HASHTAGS.join(", ")}`
+          `Invalid hashtag "${String(tag)}". Allowed: ${VALID_CAFE_HASHTAGS.join(", ")}`
         );
       }
     }
@@ -290,23 +297,14 @@ export async function updateCafe(req: Request, res: Response): Promise<void> {
     }
   }
 
-  const VALID_HASHTAGS = [
-    "wifi",
-    "outlets",
-    "quiet",
-    "japanese",
-    "noTimeLimit",
-  ] as const;
-  type Hashtag = (typeof VALID_HASHTAGS)[number];
-
   if (body.hashtags !== undefined) {
     if (!Array.isArray(body.hashtags)) {
       throw new ValidationError('"hashtags" must be an array');
     }
     for (const tag of body.hashtags as unknown[]) {
-      if (!VALID_HASHTAGS.includes(tag as Hashtag)) {
+      if (!VALID_CAFE_HASHTAGS.includes(tag as CafeHashtag)) {
         throw new ValidationError(
-          `Invalid hashtag "${String(tag)}". Allowed: ${VALID_HASHTAGS.join(", ")}`
+          `Invalid hashtag "${String(tag)}". Allowed: ${VALID_CAFE_HASHTAGS.join(", ")}`
         );
       }
     }
