@@ -8,7 +8,7 @@ import {
   AUTH_USER_KEY,
   getAuthToken,
   getAuthUser,
-  logoutUser,
+  logoutUserToServer,
 } from "../../services/api";
 
 export default function Header() {
@@ -18,20 +18,24 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const syncAuthState = useCallback(() => {
+    const user = getAuthUser();
     return {
       loggedIn: getAuthToken() !== null,
-      name: getAuthUser()?.name ?? null,
+      name: user?.name ?? null,
+      role: user?.role ?? null,
     };
   }, []);
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => syncAuthState().loggedIn);
   const [accountName, setAccountName] = useState<string | null>(() => syncAuthState().name);
+  const [userRole, setUserRole] = useState<string | null>(() => syncAuthState().role);
 
   useEffect(() => {
     function applyAuthState() {
       const s = syncAuthState();
       setIsLoggedIn(s.loggedIn);
       setAccountName(s.name);
+      setUserRole(s.role);
     }
 
     applyAuthState();
@@ -64,8 +68,8 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  function handleLogout() {
-    logoutUser();
+  async function handleLogout() {
+    await logoutUserToServer();
     setMenuOpen(false);
     navigate("/", { replace: true });
   }
@@ -129,6 +133,24 @@ export default function Header() {
                       >
                         {accountName}
                       </div>
+                    )}
+                    <Link
+                      to="/profile"
+                      id="menu-profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50 border-b border-gray-100"
+                    >
+                      👤 {t("profile.title")}
+                    </Link>
+                    {userRole === "owner" && (
+                      <Link
+                        to="/manage"
+                        id="menu-manage"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50 border-b border-gray-100"
+                      >
+                        🛠️ {t("manage.title")}
+                      </Link>
                     )}
                     <button
                       id="menu-logout"
