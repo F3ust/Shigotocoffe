@@ -2,6 +2,7 @@
 # Test suite: PATCH /api/cafes/:id — update café
 # Tests: 4
 # Requires: CREATED_CAFE_ID env var (set by 03-create.sh via run-all.sh or /tmp file)
+# Requires: OWNER_TOKEN env var (set by 03-create.sh via run-all.sh or /tmp file)
 
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,12 +27,26 @@ fi
 
 echo "Using CREATED_CAFE_ID: $CREATED_CAFE_ID"
 
+# Resolve OWNER_TOKEN
+if [ -z "${OWNER_TOKEN:-}" ] && [ -f /tmp/shigoto_owner_token.txt ]; then
+  OWNER_TOKEN=$(cat /tmp/shigoto_owner_token.txt)
+fi
+
+if [ -z "${OWNER_TOKEN:-}" ]; then
+  echo "⚠ SKIP — OWNER_TOKEN not available"
+  FAIL_COUNT=$((FAIL_COUNT + 4))
+  print_summary "04-update"
+  export_counts
+  exit 1
+fi
+
 # ── TC-04-01: PATCH with valid partial body → 200, field updated ──
 echo ""
 echo "── TC-04-01: PATCH valid partial body (update description)"
 UPDATE_BODY='{"description": {"ja": "Updated QA test description", "vi": "Updated QA test description"}}'
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$UPDATE_BODY" \
   "${BASE_URL}/cafes/${CREATED_CAFE_ID}")
@@ -48,6 +63,7 @@ echo ""
 echo "── TC-04-02: PATCH invalid ObjectId"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"district": "Hoan Kiem"}' \
   "${BASE_URL}/cafes/not-a-valid-id")
@@ -69,6 +85,7 @@ echo ""
 echo "── TC-04-03: PATCH non-existent ObjectId"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"district": "Hoan Kiem"}' \
   "${BASE_URL}/cafes/000000000000000000000000")
@@ -90,6 +107,7 @@ echo "  Current averageRating: $CURRENT_RATING"
 PATCH_BODY="{\"_id\": \"000000000000000000000000\", \"averageRating\": 9.9, \"district\": \"Hoan Kiem\"}"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X PATCH \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$PATCH_BODY" \
   "${BASE_URL}/cafes/${CREATED_CAFE_ID}")
