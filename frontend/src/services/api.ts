@@ -193,3 +193,70 @@ export async function fetchReviewsForCafe(
   );
   return data;
 }
+
+export async function createReview(
+  cafeId: string,
+  body: { rating: number; comment?: string }
+): Promise<void> {
+  await api.post(`/cafes/${cafeId}/reviews`, body);
+}
+
+export async function updateReview(
+  reviewId: string,
+  body: { rating: number; comment?: string }
+): Promise<void> {
+  await api.patch(`/reviews/${reviewId}`, body);
+}
+
+export async function deleteReview(reviewId: string): Promise<void> {
+  await api.delete(`/reviews/${reviewId}`);
+}
+
+export async function fetchUserProfile(): Promise<{ status: string; data: AuthUser }> {
+  const { data } = await api.get<{ status: string; data: AuthUser }>("/users/me");
+  return data;
+}
+
+export async function updateUserProfile(
+  body: { name?: string; email?: string }
+): Promise<{ status: string; data: AuthUser }> {
+  const { data } = await api.patch<{ status: string; data: AuthUser }>("/users/me", body);
+  // Also update stored user in localStorage
+  const currentUser = getAuthUser();
+  if (currentUser) {
+    setAuthUser({
+      ...currentUser,
+      ...data.data,
+    });
+  }
+  return data;
+}
+
+export async function createCafe(
+  body: Partial<Cafe>
+): Promise<{ status: string; data: Cafe }> {
+  const { data } = await api.post<{ status: string; data: Cafe }>("/cafes", body);
+  return data;
+}
+
+export async function updateCafe(
+  id: string,
+  body: Partial<Cafe>
+): Promise<{ status: string; data: Cafe }> {
+  const { data } = await api.patch<{ status: string; data: Cafe }>(`/cafes/${id}`, body);
+  return data;
+}
+
+export async function deleteCafe(id: string): Promise<void> {
+  await api.delete(`/cafes/${id}`);
+}
+
+export async function logoutUserToServer(): Promise<void> {
+  try {
+    await api.post("/auth/logout");
+  } catch (err) {
+    console.error("Server logout error:", err);
+  } finally {
+    setAuthToken(null);
+  }
+}
