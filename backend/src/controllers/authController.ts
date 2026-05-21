@@ -119,3 +119,10 @@ export async function login(req: Request, res: Response): Promise<void> {
     },
   });
 }
+
+export async function logout(req: Request, res: Response): Promise<void> {
+  res.json({
+    status: "success",
+  });
+}
+
