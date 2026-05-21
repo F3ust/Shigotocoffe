@@ -5,6 +5,7 @@ import { config } from "./config";
 import { errorHandler } from "./middleware/errorHandler";
 import cafeRoutes from "./routes/cafeRoutes";
 import authRoutes from "./routes/authRoutes";
+import reviewRoutes from "./routes/reviewRoutes";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/cafes", cafeRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.use(errorHandler);
 
