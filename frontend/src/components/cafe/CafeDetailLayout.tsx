@@ -6,12 +6,16 @@ import type { ReviewDTO } from "../../types/review";
 import DetailSection from "./DetailSection";
 import MenuCard from "./MenuCard";
 import ReviewSidebar from "./ReviewSidebar";
+import ReviewForm from "./ReviewForm";
 
 interface CafeDetailLayoutProps {
   cafe: Cafe;
   lang: "ja" | "vi";
   reviews: ReviewDTO[];
   isLoggedIn: boolean;
+  existingReview?: ReviewDTO;
+  onSubmitReview: (rating: number, comment: string) => Promise<void>;
+  onDeleteReview?: () => Promise<void>;
 }
 
 function RatingStars({ rating }: { rating: number }) {
@@ -95,6 +99,9 @@ export default function CafeDetailLayout({
   lang,
   reviews,
   isLoggedIn,
+  existingReview,
+  onSubmitReview,
+  onDeleteReview,
 }: CafeDetailLayoutProps) {
   const { t } = useTranslation();
   const locale = lang === "ja" ? "ja-JP" : "vi-VN";
@@ -193,7 +200,7 @@ export default function CafeDetailLayout({
             </DetailSection>
           )}
 
-          {!isLoggedIn && (
+          {!isLoggedIn ? (
             <div className="flex justify-center sm:justify-start">
               <Link
                 to="/login"
@@ -202,6 +209,12 @@ export default function CafeDetailLayout({
                 {t("cafeDetail.rate_cta")}
               </Link>
             </div>
+          ) : (
+            <ReviewForm
+              existingReview={existingReview}
+              onSubmit={onSubmitReview}
+              onDelete={onDeleteReview}
+            />
           )}
         </div>
 

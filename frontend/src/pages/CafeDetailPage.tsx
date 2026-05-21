@@ -3,7 +3,15 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CafeDetailLayout from "../components/cafe/CafeDetailLayout";
-import { fetchCafeById, fetchReviewsForCafe, getAuthToken } from "../services/api";
+import {
+  fetchCafeById,
+  fetchReviewsForCafe,
+  getAuthToken,
+  getAuthUser,
+  createReview,
+  updateReview,
+  deleteReview,
+} from "../services/api";
 import type { Cafe } from "../types/cafe";
 import type { ReviewDTO } from "../types/review";
 
@@ -99,6 +107,41 @@ export default function CafeDetailPage() {
   }
 
   const isLoggedIn = getAuthToken() !== null;
+  const currentUser = getAuthUser();
+
+  const userReview =
+    currentUser && state.kind === "ready"
+      ? state.reviews.find(
+          (r) =>
+            r.user &&
+            (typeof r.user === "string"
+              ? r.user === currentUser._id
+              : r.user._id === currentUser._id)
+        )
+      : undefined;
+
+  const handleSubmitReview = async (rating: number, comment: string) => {
+    if (!id) return;
+    if (userReview) {
+      await updateReview(userReview._id, { rating, comment });
+    } else {
+      await createReview(id, { rating, comment });
+    }
+    void load(id);
+  };
+
+  const handleDeleteReview = async () => {
+    if (userReview) {
+      await deleteReview(userReview._id);
+      if (id) {
+        void load(id);
+      }
+    }
+  };
+
+  if (state.kind !== "ready") {
+    return null;
+  }
 
   return (
     <CafeDetailLayout
@@ -106,6 +149,9 @@ export default function CafeDetailPage() {
       lang={lang}
       reviews={state.reviews}
       isLoggedIn={isLoggedIn}
+      existingReview={userReview}
+      onSubmitReview={handleSubmitReview}
+      onDeleteReview={handleDeleteReview}
     />
   );
 }
