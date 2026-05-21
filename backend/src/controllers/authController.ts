@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import { User } from "../models/User";
+import { BlacklistedToken } from "../models/BlacklistedToken";
 import { config } from "../config";
 import {
   ConflictError,
@@ -121,6 +122,22 @@ export async function login(req: Request, res: Response): Promise<void> {
 }
 
 export async function logout(req: Request, res: Response): Promise<void> {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    if (token) {
+      try {
+        const decoded = jwt.decode(token) as { exp?: number } | null;
+        const expiresAt = decoded?.exp
+          ? new Date(decoded.exp * 1000)
+          : new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h fallback
+        
+        await BlacklistedToken.create({ token, expiresAt });
+      } catch (err) {
+        // Log or handle error if needed, but don't fail logout
+      }
+    }
+  }
   res.json({
     status: "success",
   });

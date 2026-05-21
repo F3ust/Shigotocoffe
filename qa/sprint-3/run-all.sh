@@ -17,16 +17,25 @@ TOTAL_FAIL=0
 
 run_suite() {
   local script="$1"
-  bash "$script" || {
+  local output
+  output=$(bash "$script" 2>&1)
+  local exit_code=$?
+  echo "$output"
+  if [ $exit_code -ne 0 ]; then
     echo "Suite failed: $script" >&2
-    exit 1
-  }
-  # shellcheck source=/dev/null
-  source "${SCRIPT_DIR}/../be-crud-tests/lib/assert.sh"
-  TOTAL_PASS=$((TOTAL_PASS + PASS_COUNT))
-  TOTAL_FAIL=$((TOTAL_FAIL + FAIL_COUNT))
-  PASS_COUNT=0
-  FAIL_COUNT=0
+    exit $exit_code
+  fi
+
+  local counts_line
+  counts_line=$(echo "$output" | grep "^PASS:" | tail -1 || true)
+  if [ -n "$counts_line" ]; then
+    local p f
+    # Use standard grep/sed for portability across different environments
+    p=$(echo "$counts_line" | sed -E 's/.*PASS:([0-9]+).*/\1/' || echo 0)
+    f=$(echo "$counts_line" | sed -E 's/.*FAIL:([0-9]+).*/\1/' || echo 0)
+    TOTAL_PASS=$((TOTAL_PASS + p))
+    TOTAL_FAIL=$((TOTAL_FAIL + f))
+  fi
 }
 
 run_suite "${SCRIPT_DIR}/fe-auth-i18n.sh"

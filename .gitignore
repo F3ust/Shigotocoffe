@@ -40,9 +40,13 @@ coverage/
 
 # Cursor IDE local workspace notes
 .cursor/
+.antigravitycli/
+.tools/
 
 # Design artifacts (spec doc, extracted images, parser script)
 *.xlsx
 spec_images/
 spec_output.txt
 read_spec.py
+*.tsbuildinfo
+

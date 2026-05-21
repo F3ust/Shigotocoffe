@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { config } from "../config";
 import { UnauthorizedError, ForbiddenError } from "../utils/errors";
+import { BlacklistedToken } from "../models/BlacklistedToken";
+import { asyncHandler } from "./errorHandler";
 
 export interface UserPayload {
   _id: string;
@@ -16,11 +18,11 @@ declare global {
   }
 }
 
-export function authMiddleware(
+export const authMiddleware = asyncHandler(async (
   req: Request,
   _res: Response,
   next: NextFunction
-): void {
+): Promise<void> => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new UnauthorizedError("No token provided");
@@ -37,15 +39,23 @@ export function authMiddleware(
       role: "user" | "owner";
     };
 
+    const isBlacklisted = await BlacklistedToken.findOne({ token });
+    if (isBlacklisted) {
+      throw new UnauthorizedError("Token has been logged out");
+    }
+
     req.user = {
       _id: decoded.sub,
       role: decoded.role,
     };
     next();
   } catch (err) {
+    if (err instanceof UnauthorizedError) {
+      throw err;
+    }
     throw new UnauthorizedError("Invalid or expired token");
   }
-}
+});
 
 export function requireRole(role: "user" | "owner") {
   return (req: Request, _res: Response, next: NextFunction): void => {
@@ -58,3 +68,4 @@ export function requireRole(role: "user" | "owner") {
     next();
   };
 }
+
