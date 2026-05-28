@@ -112,7 +112,10 @@
     "show_password": "Hiển thị mật khẩu",
     "hide_password": "Ẩn mật khẩu",
     "show_password_short": "Hiện",
-    "hide_password_short": "Ẩn"
+    "hide_password_short": "Ẩn",
+    "success_login": "Đăng nhập thành công!",
+    "success_signup": "Đăng ký thành công!",
+    "redirecting": "Đang chuyển hướng..."
   },
   "profile": {
     "title": "Hồ sơ cá nhân",

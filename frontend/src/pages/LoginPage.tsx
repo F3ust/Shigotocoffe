@@ -17,6 +17,7 @@ export default function LoginPage() {
   }>({});
   const [apiError, setApiError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   function handleBack() {
     if (typeof window !== "undefined" && window.history.length > 1) {
@@ -41,7 +42,10 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await loginUser({ email: email.trim(), password });
-      navigate("/", { replace: true });
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
     } catch (err) {
       const msg = getAuthErrorMessage(err);
       setApiError(msg ? t(`auth_errors.${msg}`, msg) : t("auth.error_generic"));
@@ -51,7 +55,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md">
+    <>
+      <div className="mx-auto w-full max-w-md">
       <div className="rounded-2xl border border-sage-200/70 bg-white/95 p-6 shadow-lg backdrop-blur-sm sm:p-8">
         <button
           type="button"
@@ -144,5 +149,23 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl border border-sage-100 transform transition-all duration-300 animate-scale-in">
+            <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-emerald-50 text-emerald-600 mb-4">
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              {t("auth.success_login")}
+            </h3>
+            <p className="text-sm text-sage-600">
+              {t("auth.redirecting")}
+            </p>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

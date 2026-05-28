@@ -112,7 +112,10 @@
     "show_password": "パスワードを表示",
     "hide_password": "パスワードを隠す",
     "show_password_short": "表示",
-    "hide_password_short": "非表示"
+    "hide_password_short": "非表示",
+    "success_login": "ログインに成功しました！",
+    "success_signup": "新規登録に成功しました！",
+    "redirecting": "移行中..."
   },
   "profile": {
     "title": "ユーザープロフィール",
