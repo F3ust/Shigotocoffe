@@ -8,6 +8,11 @@ const DISTRICTS = [
   "Tây Hồ",
   "Cầu Giấy",
   "Hai Bà Trưng",
+  "Thanh Xuân",
+  "Long Biên",
+  "Hà Đông",
+  "Nam Từ Liêm",
+  "Bắc Từ Liêm"
 ];
 
 interface SearchBarProps {

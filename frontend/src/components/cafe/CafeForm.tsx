@@ -10,17 +10,17 @@ interface CafeFormProps {
 
 const VALID_HASHTAGS = ["wifi", "outlets", "quiet", "japanese", "noTimeLimit"];
 const DISTRICTS = [
-  "Ba Dinh",
-  "Hoan Kiem",
-  "Tay Ho",
-  "Hai Ba Trung",
-  "Dong Da",
-  "Cau Giay",
-  "Thanh Xuan",
-  "Long Bien",
-  "Ha Dong",
-  "Nam Tu Liem",
-  "Bac Tu Liem"
+  "Hoàn Kiếm",
+  "Ba Đình",
+  "Đống Đa",
+  "Tây Hồ",
+  "Cầu Giấy",
+  "Hai Bà Trưng",
+  "Thanh Xuân",
+  "Long Biên",
+  "Hà Đông",
+  "Nam Từ Liêm",
+  "Bắc Từ Liêm"
 ];
 
 export default function CafeForm({
