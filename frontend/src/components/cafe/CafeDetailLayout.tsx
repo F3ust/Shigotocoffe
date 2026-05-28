@@ -94,6 +94,16 @@ function IconStatus() {
   );
 }
 
+function IconImages() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="M21 15l-5-5L5 21" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function CafeDetailLayout({
   cafe,
   lang,
@@ -195,6 +205,23 @@ export default function CafeDetailLayout({
               <div className="-mx-1 flex gap-4 overflow-x-auto px-1 pb-1 pt-0.5 [scrollbar-width:thin]">
                 {cafe.menu.map((item, index) => (
                   <MenuCard key={`${item.name}-${item.price}-${index}`} item={item} locale={priceLocale} />
+                ))}
+              </div>
+            </DetailSection>
+          )}
+
+          {cafe.images && cafe.images.filter(Boolean).length > 0 && (
+            <DetailSection title={t("cafeDetail.section_images")} icon={<IconImages />}>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                {cafe.images.filter(Boolean).map((img, index) => (
+                  <div key={index} className="aspect-video overflow-hidden rounded-xl bg-gray-100 border border-sage-100">
+                    <img
+                      src={img}
+                      alt={`${cafe.name[lang]} - ${index + 1}`}
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
                 ))}
               </div>
             </DetailSection>

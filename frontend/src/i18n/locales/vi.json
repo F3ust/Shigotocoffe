@@ -71,7 +71,8 @@
     "status_closed_detail": "Quán đã đóng cửa.",
     "rate_cta": "Đánh giá",
     "no_reviews": "Chưa có đánh giá nào.",
-    "anonymous": "Ẩn danh"
+    "anonymous": "Ẩn danh",
+    "section_images": "Hình ảnh quán"
   },
   "footer": {
     "copyright": "© 2026 仕事コーヒー. Tìm quán cafe để làm việc tại Hà Nội.",
@@ -171,6 +172,18 @@
     "delete_confirm": "Bạn có chắc chắn muốn xóa quán này? Thao tác này không thể hoàn tác.",
     "my_cafes": "Danh sách quán của tôi",
     "no_cafes": "Bạn chưa đăng ký quán nào.",
-    "add_new_cafe": "Đăng ký thêm quán mới"
+    "add_new_cafe": "Đăng ký thêm quán mới",
+    "image_url": "Ảnh đại diện / Ảnh bìa (URL)",
+    "menu_image_placeholder": "Ảnh món ăn (URL)",
+    "add_image": "Thêm ảnh"
+  },
+  "auth_errors": {
+    "Invalid email or password": "Email hoặc mật khẩu không chính xác",
+    "Email already registered": "Email này đã được đăng ký",
+    "Password must be at least 6 characters": "Mật khẩu phải có ít nhất 6 ký tự",
+    "Token has been logged out": "Phiên làm việc đã đăng xuất",
+    "Invalid or expired token": "Mã xác thực không hợp lệ hoặc hết hạn",
+    "Requires \"owner\" role": "Yêu cầu quyền chủ quán",
+    "Authentication required": "Yêu cầu đăng nhập"
   }
 }

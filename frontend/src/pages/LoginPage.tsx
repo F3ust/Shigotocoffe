@@ -44,7 +44,7 @@ export default function LoginPage() {
       navigate("/", { replace: true });
     } catch (err) {
       const msg = getAuthErrorMessage(err);
-      setApiError(msg ?? t("auth.error_generic"));
+      setApiError(msg ? t(`auth_errors.${msg}`, msg) : t("auth.error_generic"));
     } finally {
       setSubmitting(false);
     }

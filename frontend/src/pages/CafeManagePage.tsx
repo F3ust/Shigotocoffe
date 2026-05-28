@@ -45,7 +45,10 @@ export default function CafeManagePage() {
       // Fetch all cafes (up to 100) to filter locally by owner ID
       const res = await fetchCafes({ limit: "100" });
       if (res && res.data) {
-        const owned = res.data.filter((c: any) => c.owner === currentUser?._id);
+        const owned = res.data.filter((c: any) => {
+          const ownerId = typeof c.owner === "object" && c.owner !== null ? c.owner._id : c.owner;
+          return ownerId === currentUser?._id;
+        });
         setCafes(owned);
       }
     } catch (err: any) {
