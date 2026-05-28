@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { Cafe } from "../models/Cafe";
 import { Review } from "../models/Review";
-import { NotFoundError, ValidationError } from "../utils/errors";
+import { NotFoundError, ValidationError, ForbiddenError, UnauthorizedError } from "../utils/errors";
 
 const VALID_CAFE_HASHTAGS = [
   "wifi",
@@ -151,6 +151,9 @@ export async function getCafeReviews(req: Request, res: Response): Promise<void>
 }
 
 export async function createCafe(req: Request, res: Response): Promise<void> {
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
   const body = req.body as Record<string, unknown>;
 
   for (const field of ["name", "description", "address"] as const) {
@@ -242,6 +245,7 @@ export async function createCafe(req: Request, res: Response): Promise<void> {
     });
   }
 
+  req.body.owner = req.user._id;
   const cafe = await Cafe.create(req.body);
   res.status(201).json({ status: "success", data: cafe });
 }
@@ -251,6 +255,19 @@ export async function updateCafe(req: Request, res: Response): Promise<void> {
 
   if (!mongoose.isValidObjectId(id)) {
     throw new ValidationError("Invalid cafe id");
+  }
+
+  const cafe = await Cafe.findById(id);
+  if (!cafe) {
+    throw new NotFoundError(`Cafe not found: ${id}`);
+  }
+
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
+
+  if (!cafe.owner || cafe.owner.toString() !== req.user._id) {
+    throw new ForbiddenError("You do not own this cafe");
   }
 
   const body = req.body as Record<string, unknown>;
@@ -357,16 +374,12 @@ export async function updateCafe(req: Request, res: Response): Promise<void> {
     });
   }
 
-  const cafe = await Cafe.findByIdAndUpdate(id, body, {
+  const updatedCafe = await Cafe.findByIdAndUpdate(id, body, {
     new: true,
     runValidators: true,
   });
 
-  if (!cafe) {
-    throw new NotFoundError(`Cafe not found: ${id}`);
-  }
-
-  res.json({ status: "success", data: cafe });
+  res.json({ status: "success", data: updatedCafe });
 }
 
 export async function deleteCafe(req: Request, res: Response): Promise<void> {
@@ -376,11 +389,23 @@ export async function deleteCafe(req: Request, res: Response): Promise<void> {
     throw new ValidationError("Invalid cafe id");
   }
 
-  const cafe = await Cafe.findByIdAndDelete(id);
-
+  const cafe = await Cafe.findById(id);
   if (!cafe) {
     throw new NotFoundError(`Cafe not found: ${id}`);
   }
+
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
+
+  if (!cafe.owner || cafe.owner.toString() !== req.user._id) {
+    throw new ForbiddenError("You do not own this cafe");
+  }
+
+  await Cafe.findByIdAndDelete(id);
+
+  // Cascade delete reviews
+  await Review.deleteMany({ cafe: id });
 
   res.status(204).send();
 }

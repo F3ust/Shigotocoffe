@@ -13,6 +13,7 @@ export default function LanguageToggle() {
   ] as const;
 
   function switchLang(lang: string) {
+    console.log("switchLang called with:", lang);
     i18n.changeLanguage(lang);
     localStorage.setItem("lang", lang);
     setIsOpen(false);
@@ -21,11 +22,14 @@ export default function LanguageToggle() {
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
+        console.log("handleClickOutside triggered. target outside ref:", e.target);
         setIsOpen(false);
+      } else {
+        console.log("handleClickOutside triggered. target is INSIDE ref:", e.target);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   return (
@@ -33,7 +37,10 @@ export default function LanguageToggle() {
       <button
         id="language-toggle"
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          console.log("Language toggle button clicked. Next state:", !isOpen);
+          setIsOpen(!isOpen);
+        }}
         className="flex h-9 items-center gap-1.5 rounded-md border border-sage-300 px-3 text-sm font-medium text-sage-700 transition-colors hover:bg-sage-50"
       >
         {t("nav.language")}
@@ -47,7 +54,11 @@ export default function LanguageToggle() {
           {LANGUAGES.map(({ code, label }) => (
             <button
               key={code}
-              onClick={() => switchLang(code)}
+              onClick={(e) => {
+                console.log(`Dropdown item ${code} clicked.`);
+                e.stopPropagation();
+                switchLang(code);
+              }}
               className={`flex w-full items-center gap-2 px-4 py-2.5 text-sm transition-colors hover:bg-sage-50 ${
                 current === code ? "bg-sage-50 font-semibold text-sage-700" : "text-gray-700"
               }`}
@@ -60,3 +71,4 @@ export default function LanguageToggle() {
     </div>
   );
 }
+

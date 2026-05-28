@@ -2,6 +2,7 @@
 # Test suite: DELETE /api/cafes/:id
 # Tests: 3
 # Requires: CREATED_CAFE_ID env var (set by 03-create.sh)
+# Requires: OWNER_TOKEN env var (set by 03-create.sh)
 
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,11 +27,25 @@ fi
 
 echo "Using CREATED_CAFE_ID: $CREATED_CAFE_ID"
 
+# Resolve OWNER_TOKEN
+if [ -z "${OWNER_TOKEN:-}" ] && [ -f /tmp/shigoto_owner_token.txt ]; then
+  OWNER_TOKEN=$(cat /tmp/shigoto_owner_token.txt)
+fi
+
+if [ -z "${OWNER_TOKEN:-}" ]; then
+  echo "⚠ SKIP — OWNER_TOKEN not available"
+  FAIL_COUNT=$((FAIL_COUNT + 3))
+  print_summary "05-delete"
+  export_counts
+  exit 1
+fi
+
 # ── TC-05-01: DELETE existing café → 204, no body ──
 echo ""
 echo "── TC-05-01: DELETE existing café"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X DELETE \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   "${BASE_URL}/cafes/${CREATED_CAFE_ID}")
 BODY=$(echo "$RESP" | sed '$d')
 STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
@@ -45,14 +60,16 @@ else
   _fail "TC-05-01 response body is empty" "Got body: '$BODY'"
 fi
 
-# Clean up temp file
+# Clean up temp files
 rm -f /tmp/shigoto_created_cafe_id.txt
+rm -f /tmp/shigoto_owner_token.txt
 
 # ── TC-05-02: DELETE same café again → 404 ──
 echo ""
 echo "── TC-05-02: DELETE already-deleted café"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X DELETE \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   "${BASE_URL}/cafes/${CREATED_CAFE_ID}")
 BODY=$(echo "$RESP" | sed '$d')
 STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')
@@ -65,6 +82,7 @@ echo ""
 echo "── TC-05-03: DELETE invalid ObjectId"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X DELETE \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   "${BASE_URL}/cafes/bad-id-xyz")
 BODY=$(echo "$RESP" | sed '$d')
 STATUS=$(echo "$RESP" | tail -n1 | sed 's/__STATUS__//')

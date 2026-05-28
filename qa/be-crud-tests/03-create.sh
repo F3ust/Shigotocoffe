@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Test suite: POST /api/cafes — create café
 # Tests: 6
-# Side-effect: exports CREATED_CAFE_ID for use by 04-update.sh and 05-delete.sh
+# Side-effect: exports CREATED_CAFE_ID and OWNER_TOKEN for use by 04-update.sh and 05-delete.sh
 
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,6 +11,19 @@ echo "============================================"
 echo " 03 — POST /api/cafes (create)"
 echo "============================================"
 
+# Register owner for creation
+RANDOM_SUFFIX=$(date +%s)
+REG_BODY="{\"name\":\"Create Cafe Owner\",\"email\":\"create_owner_$RANDOM_SUFFIX@shigoto.local\",\"password\":\"password123\",\"role\":\"owner\"}"
+REG_RESP=$(curl -s -H "Content-Type: application/json" -d "$REG_BODY" "${BASE_URL}/auth/register")
+OWNER_TOKEN=$(echo "$REG_RESP" | jq -r '.data.token // empty')
+
+if [ -z "$OWNER_TOKEN" ]; then
+  echo "✗ Failed to register owner: $REG_RESP"
+  exit 1
+fi
+echo "✓ Registered Owner for cafe creation tests"
+echo "$OWNER_TOKEN" > /tmp/shigoto_owner_token.txt
+
 FIXTURE="${SCRIPT_DIR}/fixtures/valid-cafe.json"
 
 # ── TC-03-01: POST with valid body → 201, data._id exists ──
@@ -18,6 +31,7 @@ echo ""
 echo "── TC-03-01: POST valid café body"
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "@${FIXTURE}" \
   "${BASE_URL}/cafes")
@@ -44,6 +58,7 @@ echo "── TC-03-02: POST missing name.vi"
 BAD_BODY=$(jq '. | .name = {"ja": "Test"} ' "${FIXTURE}")
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$BAD_BODY" \
   "${BASE_URL}/cafes")
@@ -59,6 +74,7 @@ echo "── TC-03-03: POST missing openingHours.open"
 BAD_BODY=$(jq '. | .openingHours = {"close": "22:00"}' "${FIXTURE}")
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$BAD_BODY" \
   "${BASE_URL}/cafes")
@@ -77,6 +93,7 @@ echo "── TC-03-04: POST invalid time openingHours.open=25:00"
 BAD_BODY=$(jq '. | .openingHours.open = "25:00"' "${FIXTURE}")
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$BAD_BODY" \
   "${BASE_URL}/cafes")
@@ -92,6 +109,7 @@ echo "── TC-03-05: POST invalid hashtag"
 BAD_BODY=$(jq '. | .hashtags = ["invalid_tag"]' "${FIXTURE}")
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$BAD_BODY" \
   "${BASE_URL}/cafes")
@@ -110,6 +128,7 @@ echo "── TC-03-06: POST invalid coordinates (lng > 180)"
 BAD_BODY=$(jq '. | .location.coordinates = [200, 21.0]' "${FIXTURE}")
 RESP=$(curl -s -w "\n__STATUS__%{http_code}" \
   -X POST \
+  -H "Authorization: Bearer $OWNER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$BAD_BODY" \
   "${BASE_URL}/cafes")

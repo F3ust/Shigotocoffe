@@ -88,6 +88,10 @@ fi
 
 run_suite "${SCRIPT_DIR}/04-update.sh"    || SUITE_EXIT=$?
 run_suite "${SCRIPT_DIR}/05-delete.sh"    || SUITE_EXIT=$?
+run_suite "${SCRIPT_DIR}/06-auth-middleware.sh" || SUITE_EXIT=$?
+run_suite "${SCRIPT_DIR}/07-cafe-owner-crud.sh" || SUITE_EXIT=$?
+run_suite "${SCRIPT_DIR}/08-review-crud.sh"     || SUITE_EXIT=$?
+run_suite "${SCRIPT_DIR}/09-profile-logout.sh"  || SUITE_EXIT=$?
 
 # ── Final Summary ──
 TOTAL=$((TOTAL_PASS + TOTAL_FAIL))
