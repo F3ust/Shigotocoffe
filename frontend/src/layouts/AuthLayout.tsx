@@ -17,7 +17,7 @@ export default function AuthLayout() {
       />
       <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2748%27%20height=%2748%27%20viewBox=%270%200%2048%2048%27%3E%3Cpath%20fill=%27%234a7c59%27%20fill-opacity=%27.06%27%20d=%27M24%2036c6-10%2018-10%2024%200-6%2010-18%2010-24%200z%27/%3E%3C/svg%3E')] opacity-60" aria-hidden />
 
-      <div className="relative z-10 flex justify-end px-4 pt-4 sm:px-6">
+      <div className="relative z-20 flex justify-end px-4 pt-4 sm:px-6">
         <LanguageToggle />
       </div>
 
