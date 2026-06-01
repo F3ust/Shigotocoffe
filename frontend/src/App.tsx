@@ -8,6 +8,7 @@ import SignupPage from "./pages/SignupPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import CafeManagePage from "./pages/CafeManagePage";
 import ProfilePage from "./pages/ProfilePage";
+import FavoritesPage from "./pages/FavoritesPage";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/cafes/:id" element={<CafeDetailPage />} />
           <Route path="/manage" element={<CafeManagePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

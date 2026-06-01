@@ -7,7 +7,8 @@
     "register": "Đăng ký",
     "info": "Thông tin",
     "logout": "Đăng xuất",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "favorites": "Yêu thích"
   },
   "hero": {
     "title": "TÌM KIẾM QUÁN CÀ PHÊ\nLÀM VIỆC TẠI HÀ NỘI"
@@ -188,5 +189,23 @@
     "Invalid or expired token": "Mã xác thực không hợp lệ hoặc hết hạn",
     "Requires \"owner\" role": "Yêu cầu quyền chủ quán",
     "Authentication required": "Yêu cầu đăng nhập"
+  },
+  "sprint4": {
+    "edit_visually": "Chỉnh sửa trực quan",
+    "reply_badge": "Chủ quán phản hồi",
+    "reply_placeholder": "Viết phản hồi của bạn...",
+    "reply_submit": "Gửi phản hồi",
+    "reply_success": "Gửi phản hồi thành công.",
+    "upload_button": "Tải ảnh từ máy",
+    "upload_success": "Tải ảnh thành công.",
+    "upload_failed": "Tải ảnh thất bại.",
+    "upload_drag_drop": "Kéo thả hoặc click để chọn ảnh",
+    "bookmark_tooltip_add": "Thêm vào yêu thích",
+    "bookmark_tooltip_remove": "Xóa khỏi yêu thích",
+    "favorites_title": "Quán yêu thích của tôi",
+    "no_favorites": "Bạn chưa yêu thích quán nào.",
+    "login_required_bookmark": "Vui lòng đăng nhập để lưu quán yêu thích.",
+    "reply_empty_error": "Nội dung phản hồi không được để trống.",
+    "owner_reply_section": "Phản hồi của chủ quán"
   }
 }

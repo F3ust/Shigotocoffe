@@ -1,19 +1,71 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/cafe/SearchBar";
 import FilterPanel from "../components/cafe/FilterPanel";
 import CafeCard from "../components/cafe/CafeCard";
-import { fetchCafes } from "../services/api";
+import {
+  fetchCafes,
+  getAuthUser,
+  getAuthToken,
+  fetchFavorites,
+  addFavorite,
+  removeFavorite,
+} from "../services/api";
 import type { Cafe, CafeQueryParams } from "../types/cafe";
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [cafes, setCafes] = useState<Cafe[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [total, setTotal] = useState(0);
   const [params, setParams] = useState<CafeQueryParams>({});
   const [filterOpen, setFilterOpen] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+
+  const isLoggedIn = getAuthToken() !== null;
+
+  const loadFavorites = useCallback(async () => {
+    if (!isLoggedIn) return;
+    try {
+      const res = await fetchFavorites();
+      setFavoriteIds(res.data.map((c) => c._id));
+    } catch (err) {
+      console.error("Failed to load favorites:", err);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    loadFavorites();
+  }, [loadFavorites]);
+
+  const handleToggleFavorite = async (cafeId: string) => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    const isFav = favoriteIds.includes(cafeId);
+    try {
+      if (isFav) {
+        await removeFavorite(cafeId);
+        setFavoriteIds((prev) => prev.filter((id) => id !== cafeId));
+      } else {
+        await addFavorite(cafeId);
+        setFavoriteIds((prev) => [...prev, cafeId]);
+      }
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+    }
+  };
+
+  useEffect(() => {
+    const user = getAuthUser();
+    if (user && user.role === "owner") {
+      navigate("/manage", { replace: true });
+    }
+  }, [navigate]);
 
   const loadCafes = useCallback(async (searchParams: CafeQueryParams) => {
     setLoading(true);
@@ -154,7 +206,12 @@ export default function HomePage() {
         {!loading && cafes.length > 0 && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {cafes.map((cafe) => (
-              <CafeCard key={cafe._id} cafe={cafe} />
+              <CafeCard
+                key={cafe._id}
+                cafe={cafe}
+                isFavorite={favoriteIds.includes(cafe._id)}
+                onToggleFavorite={() => handleToggleFavorite(cafe._id)}
+              />
             ))}
           </div>
         )}

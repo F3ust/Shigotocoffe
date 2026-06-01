@@ -11,6 +11,7 @@ import {
   createReview,
   updateReview,
   deleteReview,
+  replyToReview,
 } from "../services/api";
 import type { Cafe } from "../types/cafe";
 import type { ReviewDTO } from "../types/review";
@@ -139,6 +140,13 @@ export default function CafeDetailPage() {
     }
   };
 
+  const handleReplyToReview = async (reviewId: string, comment: string) => {
+    await replyToReview(reviewId, comment);
+    if (id) {
+      void load(id);
+    }
+  };
+
   if (state.kind !== "ready") {
     return null;
   }
@@ -149,9 +157,11 @@ export default function CafeDetailPage() {
       lang={lang}
       reviews={state.reviews}
       isLoggedIn={isLoggedIn}
+      currentUser={currentUser}
       existingReview={userReview}
       onSubmitReview={handleSubmitReview}
       onDeleteReview={handleDeleteReview}
+      onReplyToReview={handleReplyToReview}
     />
   );
 }

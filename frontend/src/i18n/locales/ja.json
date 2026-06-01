@@ -7,7 +7,8 @@
     "register": "新規登録",
     "info": "個人情報",
     "logout": "ログアウト",
-    "language": "言語"
+    "language": "言語",
+    "favorites": "お気に入り"
   },
   "hero": {
     "title": "ハノイのワークカフェを\n見つけよう"
@@ -188,5 +189,23 @@
     "Invalid or expired token": "トークンが無効であるか期限切れです",
     "Requires \"owner\" role": "オーナー権限が必要です",
     "Authentication required": "ログインが必要です"
+  },
+  "sprint4": {
+    "edit_visually": "直感的に編集",
+    "reply_badge": "店舗オーナーからの返信",
+    "reply_placeholder": "返信を入力してください...",
+    "reply_submit": "返信を送信",
+    "reply_success": "返信の送信に成功しました。",
+    "upload_button": "画像アップロード",
+    "upload_success": "アップロードに成功しました。",
+    "upload_failed": "アップロードに失敗しました。",
+    "upload_drag_drop": "ドラッグ＆ドロップまたはクリックで画像を選択",
+    "bookmark_tooltip_add": "お気に入りに追加",
+    "bookmark_tooltip_remove": "お気に入りから削除",
+    "favorites_title": "お気に入りカフェ",
+    "no_favorites": "お気に入りのカフェはまだありません。",
+    "login_required_bookmark": "お気に入り機能を利用するにはログインが必要です。",
+    "reply_empty_error": "返信内容は空にできません。",
+    "owner_reply_section": "オーナーからの返信"
   }
 }

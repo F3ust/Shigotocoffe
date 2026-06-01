@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { Cafe, MenuItem } from "../../types/cafe";
+import { uploadImage } from "../../services/api";
 
 interface CafeFormProps {
   initialData?: Cafe;
@@ -275,21 +276,41 @@ export default function CafeForm({
           </div>
           <div className="space-y-2">
             {images.map((img, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="https://example.com/image.jpg"
-                  value={img}
-                  onChange={(e) => handleImageChange(idx, e.target.value)}
-                  className="flex-1 rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImage(idx)}
-                  className="text-xs font-semibold text-red-600 hover:bg-red-50 px-2.5 py-2.5 rounded-xl border border-transparent hover:border-red-100 transition-colors"
-                >
-                  {t("manage.remove")}
-                </button>
+              <div key={idx} className="flex flex-col gap-2 bg-cream-50/20 p-3 rounded-xl border border-gray-100">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="https://example.com/image.jpg"
+                    value={img}
+                    onChange={(e) => handleImageChange(idx, e.target.value)}
+                    className="flex-1 rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500 bg-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(idx)}
+                    className="text-xs font-semibold text-red-600 hover:bg-red-50 px-2.5 py-2.5 rounded-xl border border-transparent hover:border-red-100 transition-colors"
+                  >
+                    {t("manage.remove")}
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const res = await uploadImage(file);
+                          handleImageChange(idx, res.url);
+                        } catch (err) {
+                          alert(t("sprint4.upload_failed"));
+                        }
+                      }
+                    }}
+                    className="text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-sage-50 file:text-sage-700 hover:file:bg-sage-100 cursor-pointer"
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -385,13 +406,29 @@ export default function CafeForm({
                     className="w-full rounded-lg border border-sage-200 px-3 py-1.5 text-sm outline-none focus:border-sage-500"
                   />
                 </div>
-                <div className="flex-1 min-w-[180px]">
+                <div className="flex-1 min-w-[180px] space-y-1.5">
                   <input
                     type="text"
                     placeholder={t("manage.menu_image_placeholder")}
                     value={item.image || ""}
                     onChange={(e) => handleMenuItemChange(index, "image", e.target.value)}
-                    className="w-full rounded-lg border border-sage-200 px-3 py-1.5 text-sm outline-none focus:border-sage-500"
+                    className="w-full rounded-lg border border-sage-200 px-3 py-1.5 text-sm outline-none focus:border-sage-500 bg-white"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const res = await uploadImage(file);
+                          handleMenuItemChange(index, "image", res.url);
+                        } catch (err) {
+                          alert(t("sprint4.upload_failed"));
+                        }
+                      }
+                    }}
+                    className="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-sage-50 file:text-sage-700 hover:file:bg-sage-100 cursor-pointer"
                   />
                 </div>
                 <button

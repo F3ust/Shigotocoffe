@@ -22,6 +22,7 @@ export interface Cafe {
   hashtags: string[];
   averageRating: number;
   reviewCount: number;
+  owner?: string;
 }
 
 export interface CafeListResponse {

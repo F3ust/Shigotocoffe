@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, type ReactNode } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Cafe } from "../../types/cafe";
 import type { ReviewDTO } from "../../types/review";
@@ -7,15 +7,19 @@ import DetailSection from "./DetailSection";
 import MenuCard from "./MenuCard";
 import ReviewSidebar from "./ReviewSidebar";
 import ReviewForm from "./ReviewForm";
+import CafeForm from "./CafeForm";
+import { fetchFavorites, addFavorite, removeFavorite, updateCafe } from "../../services/api";
 
 interface CafeDetailLayoutProps {
   cafe: Cafe;
   lang: "ja" | "vi";
   reviews: ReviewDTO[];
   isLoggedIn: boolean;
+  currentUser?: any;
   existingReview?: ReviewDTO;
   onSubmitReview: (rating: number, comment: string) => Promise<void>;
   onDeleteReview?: () => Promise<void>;
+  onReplyToReview?: (reviewId: string, comment: string) => Promise<void>;
 }
 
 function RatingStars({ rating }: { rating: number }) {
@@ -109,12 +113,48 @@ export default function CafeDetailLayout({
   lang,
   reviews,
   isLoggedIn,
+  currentUser,
   existingReview,
   onSubmitReview,
   onDeleteReview,
+  onReplyToReview,
 }: CafeDetailLayoutProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const locale = lang === "ja" ? "ja-JP" : "vi-VN";
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchFavorites()
+        .then((res) => {
+          setIsFavorite(res.data.some((c) => c._id === cafe._id));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [isLoggedIn, cafe._id]);
+
+  const handleToggleFavorite = async () => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    try {
+      if (isFavorite) {
+        await removeFavorite(cafe._id);
+        setIsFavorite(false);
+      } else {
+        await addFavorite(cafe._id);
+        setIsFavorite(true);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const isOwner = currentUser?.role === "owner" && (cafe.owner === currentUser._id || !cafe.owner);
 
   const mainImage =
     cafe.images[0] ||
@@ -128,6 +168,30 @@ export default function CafeDetailLayout({
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-14 pt-6 sm:px-6 lg:pb-16 lg:pt-8">
+      {/* Visual Editor Modal */}
+      {editOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-4xl rounded-2xl bg-white p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <button
+              onClick={() => setEditOpen(false)}
+              className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 text-xl font-bold p-2"
+            >
+              ✕
+            </button>
+            <h2 className="mb-4 text-xl font-bold text-gray-900">{t("manage.edit_title")}</h2>
+            <CafeForm
+              initialData={cafe}
+              onSubmit={async (data) => {
+                await updateCafe(cafe._id, data);
+                setEditOpen(false);
+                window.location.reload();
+              }}
+              onCancel={() => setEditOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="overflow-hidden rounded-2xl border border-sage-100 bg-white shadow-md">
         <div className="relative aspect-[21/9] min-h-[220px] overflow-hidden bg-cream-200 sm:aspect-[21/8]">
           <img
@@ -140,9 +204,37 @@ export default function CafeDetailLayout({
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div className="space-y-2">
-                <h1 className="text-2xl font-extrabold tracking-tight text-white drop-shadow-sm sm:text-3xl">
-                  {cafe.name[lang]}
-                </h1>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-2xl font-extrabold tracking-tight text-white drop-shadow-sm sm:text-3xl">
+                    {cafe.name[lang]}
+                  </h1>
+                  {/* Bookmark Toggle Heart Button */}
+                  <button
+                    id={`bookmark-${cafe._id}`}
+                    onClick={handleToggleFavorite}
+                    className={`flex h-9 w-9 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm transition-all ${
+                      isFavorite
+                        ? "bg-rose-500 border-rose-500 text-white hover:bg-rose-600"
+                        : "bg-white/20 border-white/30 text-white hover:bg-white/30"
+                    }`}
+                    aria-label="Bookmark"
+                    title={isFavorite ? t("sprint4.bookmark_tooltip_remove") : t("sprint4.bookmark_tooltip_add")}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                    </svg>
+                  </button>
+
+                  {/* Visual Edit Button for Cafe Owner */}
+                  {isOwner && (
+                    <button
+                      onClick={() => setEditOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-sage-600 hover:bg-sage-700 px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-colors"
+                    >
+                      ✏️ {t("sprint4.edit_visually")}
+                    </button>
+                  )}
+                </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-sm ${
@@ -236,7 +328,7 @@ export default function CafeDetailLayout({
                 {t("cafeDetail.rate_cta")}
               </Link>
             </div>
-          ) : (
+          ) : currentUser?.role === "owner" ? null : (
             <ReviewForm
               existingReview={existingReview}
               onSubmit={onSubmitReview}
@@ -245,7 +337,12 @@ export default function CafeDetailLayout({
           )}
         </div>
 
-        <ReviewSidebar reviews={reviews} lang={lang} />
+        <ReviewSidebar
+          reviews={reviews}
+          lang={lang}
+          isOwner={isOwner}
+          onReplyToReview={onReplyToReview}
+        />
       </div>
     </div>
   );

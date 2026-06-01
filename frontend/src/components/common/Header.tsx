@@ -142,6 +142,14 @@ export default function Header() {
                     >
                       👤 {t("profile.title")}
                     </Link>
+                    <Link
+                      to="/favorites"
+                      id="menu-favorites"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50 border-b border-gray-100"
+                    >
+                      ❤️ {t("nav.favorites")}
+                    </Link>
                     {userRole === "owner" && (
                       <Link
                         to="/manage"
