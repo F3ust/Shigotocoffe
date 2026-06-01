@@ -10,8 +10,10 @@ import {
   removeFavorite,
   fetchCafes,
   deleteCafe,
+  createCafe,
 } from "../services/api";
 import type { Cafe } from "../types/cafe";
+import CafeForm from "../components/cafe/CafeForm";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -168,7 +170,7 @@ function ProfileCard() {
 
 // ─── Owner Cafe List ─────────────────────────────────────────────────────────
 
-function OwnerCafeList() {
+function OwnerCafeList({ refreshTrigger }: { refreshTrigger?: number }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as "ja" | "vi";
   const navigate = useNavigate();
@@ -201,7 +203,7 @@ function OwnerCafeList() {
     }
   }, [currentUser?._id, t]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); }, [load, refreshTrigger]);
 
   const handleDelete = async (id: string) => {
     if (!window.confirm(t("manage.delete_confirm"))) return;
@@ -430,6 +432,9 @@ export default function ProfilePage() {
   const isLoggedIn = getAuthToken() !== null;
   const isOwner = currentUser?.role === "owner";
 
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
   }, [isLoggedIn, navigate]);
@@ -438,7 +443,7 @@ export default function ProfilePage() {
 
   return (
     <div
-      className="min-h-screen py-10 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 relative"
       style={{
         backgroundImage:
           "url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1600&q=60')",
@@ -457,7 +462,7 @@ export default function ProfilePage() {
           </h1>
           {isOwner && (
             <button
-              onClick={() => navigate("/manage")}
+              onClick={() => setIsCreateModalOpen(true)}
               className="inline-flex items-center gap-2 rounded-xl bg-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-sage-700 transition-colors"
             >
               + {t("manage.add_new_cafe")}
@@ -471,9 +476,33 @@ export default function ProfilePage() {
           <ProfileCard />
 
           {/* Right: cafe list or favorites list */}
-          {isOwner ? <OwnerCafeList /> : <UserFavoritesList />}
+          {isOwner ? <OwnerCafeList refreshTrigger={refreshTrigger} /> : <UserFavoritesList />}
         </div>
       </div>
+
+      {/* Create Cafe Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-3xl bg-cream-100 rounded-3xl p-6 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setIsCreateModalOpen(false)}
+              className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white border border-sage-200 text-gray-500 hover:text-gray-700 hover:bg-sage-50 transition-colors shadow-sm text-lg font-bold z-10"
+            >
+              ✕
+            </button>
+            <div className="mt-4">
+              <CafeForm
+                onSubmit={async (data) => {
+                  await createCafe(data);
+                  setIsCreateModalOpen(false);
+                  setRefreshTrigger((prev) => prev + 1);
+                }}
+                onCancel={() => setIsCreateModalOpen(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

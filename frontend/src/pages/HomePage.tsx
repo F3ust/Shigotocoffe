@@ -63,7 +63,7 @@ export default function HomePage() {
   useEffect(() => {
     const user = getAuthUser();
     if (user && user.role === "owner") {
-      navigate("/manage", { replace: true });
+      navigate("/profile", { replace: true });
     }
   }, [navigate]);
 
