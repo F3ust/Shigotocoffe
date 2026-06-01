@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Cafe, MenuItem } from "../../types/cafe";
 import type { ReviewDTO } from "../../types/review";
@@ -195,7 +194,6 @@ export default function CafeDetailLayout({
   onReplyToReview,
 }: CafeDetailLayoutProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const locale = lang === "ja" ? "ja-JP" : "vi-VN";
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
 
