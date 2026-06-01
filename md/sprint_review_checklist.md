@@ -1,0 +1,218 @@
+# Sprint Review Checklist — What to do
+
+> Source: `csv/sprint_review_checklist.csv`
+
+## Checklist
+
+### 1.0. スプリントバックログと「スプリントゴール達成度」と「スプリントゴール達成度の理由」を確認し、記入漏れがあればFB欄にベトナム語で記入する
+
+**What to do:** スプリントバックログと「スプリントゴール達成度」と「スプリントゴール達成度の理由」を確認し、記入漏れがあればFB欄にベトナム語で記入する
+
+Check Sprint Backlog với “mức độ đạt mục tiêu sprint” và “lý do của mức độ đạt mục tiêu sprint”, nếu có ghi thiếu gì thì ghi phản hồi bằng tiếng Việt vào cột FB
+
+**Criteria:**
+
+.
+
+### 2.0. 開発Tが記入した問題点・原因・対策の妥当性を確認し、問題や不明点があればベトナム語でFB欄に記入する
+
+**What to do:** 開発Tが記入した問題点・原因・対策の妥当性を確認し、問題や不明点があればベトナム語でFB欄に記入する
+
+Kiểm tra “vấn đề – nguyên nhân – biện pháp” do DevT ghi có hợp lý hay không, nếu có vấn đề hoặc điểm nào chưa rõ thì ghi FB bằng tiếng Việt vào cột FB
+
+**Criteria:**
+
+> 以下のどちらかに該当する内容になっているか
+> ・今後類似のケースが発生しない対策になっている
+> ・今後類似のケースが発生しても簡単に解決できる対策になっている
+>
+> Nội dung DevT ghi có thuộc 1 trong 2 trường hợp sau hay không:
+> ・Là biện pháp giúp ngăn không để case tương tự xảy ra trong tương lai
+> ・Là biện pháp giúp dễ dàng giải quyết kể cả trong trường hợp case tương tự xảy ra lần nữa
+
+### 3.0. 開発Tが記入した「スプリントゴール達成度」と「スプリントゴール達成度の理由」の妥当性を確認し、問題や不明点があればFB欄にベトナム語で記入する
+
+**What to do:** 開発Tが記入した「スプリントゴール達成度」と「スプリントゴール達成度の理由」の妥当性を確認し、問題や不明点があればFB欄にベトナム語で記入する
+
+Kiểm tra “mức độ đạt mục tiêu sprint” và “lý do của mức độ đạt mục tiêu sprint” do DevT ghi có hợp lý hay không, nếu có vấn đề hoặc điểm chưa rõ thì ghi FB bằng tiếng Việt.
+
+**Criteria:**
+
+> ・スプリントバックログの進捗
+> ・スプリントバックログの問題点・問題点への対応状況
+>
+> ・Tiến độ của Sprint Backlog
+> ・Các vấn đề trong Sprint Backlog và tình trạng xử lý các vấn đề đó
+
+### 4.0. 記入したFBに沿って、開発Tに確認・質問する
+
+**What to do:** 記入したFBに沿って、開発Tに確認・質問する
+※No.4～8の時間は目安で、多少前後しても問題ない
+
+Dựa trên các FB đã ghi, tiến hành xác nhận và đặt câu hỏi cho DevT.
+※Thời gian từ mục No.4–8 chỉ mang tính tham khảo, có thể xê dịch một chút cũng không sao.
+
+**Criteria:**
+
+> POTからの確認・質問に対して開発Tはすぐに明確に回答したか
+> ※検討が必要な場合も、「検討して〇日の〇時までに回答します」と回答できればOK
+>
+> DevT có trả lời ngay lập tức một cách rõ ràng đối với các xác nhận câu hỏi từ POT hay không?
+> ※Trường hợp cần thời gian xem xét, vẫn được chấp nhận nếu trả lời “chúng tôi sẽ xem xét và trả lời trước ...giờ ngày...”
+
+### 4.0. POTからのFBに回答する
+
+**What to do:** POTからのFBに回答する
+※No.4～8の時間は目安で、多少前後しても問題ない
+
+Trả lời các phản hồi (FB) từ POT
+※ Thời gian của các mục No.4–8 chỉ mang tính tham khảo, có thể xê dịch một chút cũng không sao.
+
+**Criteria:**
+
+> スプリントレビュー準備チェックリストNo.12
+> Checklist chuẩn bị sprint review No.12
+
+**Notes:**
+
+Dev team track
+
+### 5.0. 開発Tのデモを見て、問題や不明点があれば確認・質問し、FB欄にもベトナム語で記入する
+
+**What to do:** 開発Tのデモを見て、問題や不明点があれば確認・質問し、FB欄にもベトナム語で記入する
+
+Xem demo của DevT, nếu có vấn đề hoặc điểm chưa rõ thì xác nhận, đặt câu hỏi và ghi vào cột FB bằng tiếng Việt.
+
+**Criteria:**
+
+> ・POTが指摘や質問をしなくても、開発Tのデモはスプリントゴール達成とプロダクトバックログの受入条件達成の是非が確認ができる内容になっていたか
+> ・画面設計書や画面遷移図の内容と完全に一致した開発をしているか
+> ・スプリントバックログの進捗とデモの内容に違いがないか
+>
+> ・Nội dung demo của DevT có đạt được mục tiêu sprint và các điều kiện chấp nhận của Product Backlog hay không, ngay cả khi POT không có FB hay câu hỏi nào
+> ・Phát triển có hoàn toàn khớp với nội dung tài liệu thiết kế màn hình và sơ đồ chuyển màn hình hay không?
+> ・Có sự khác biệt nào giữa tiến độ ở Sprint Backlog và nội dung demo hay không?
+
+### 5.0. ①デモを実施する
+
+**What to do:** ①デモを実施する
+②POTからのFBに回答する
+
+① Thực hiện demo
+② Trả lời các FB từ POT
+
+**Criteria:**
+
+> スプリントレビュー準備チェックリストNo.13
+> Checklist chuẩn bị sprint review No.13
+
+**Notes:**
+
+Dev team track
+
+### 6.0. スプリントゴール達成度とその理由をベトナム語で記入する
+
+**What to do:** スプリントゴール達成度とその理由をベトナム語で記入する
+プロダクトバックログのステータスを更新する
+Ghi mức độ đạt mục tiêu sprint và lý do bằng tiếng Việt
+Thay đổi trạng thái trong Product backlog
+
+**Criteria:**
+
+> このチェックリストのNo.2～5の結果
+> Dựa trên kết quả của các mục No.2–5 trong checklist này
+
+### 6.0. POTのすべてのFBに対して「FBへの対応方針」「対応する内容／対応しない理由」をすべてベトナム語で記入する
+
+**What to do:** POTのすべてのFBに対して「FBへの対応方針」「対応する内容／対応しない理由」をすべてベトナム語で記入する
+
+Đối với tất cả các FB từ POT, hãy ghi bằng tiếng Việt các nội dung: "Hướng xử lý FB" và "Nội dung sẽ xử lý  Lý do không xử lý"
+
+**Criteria:**
+
+> FBに対して明確で具体的な回答になっているか
+> Câu trả lời cho FB có rõ ràng và cụ thể hay không?
+
+**Notes:**
+
+Dev team track
+
+### 7.0. 開発Tが記入した「FBへの対応方針」「対応する内容／対応しない理由」を確認し、問題があれば開発Tに確認し、問題なければ「対応方針承認」に✅を入れる
+
+**What to do:** 開発Tが記入した「FBへの対応方針」「対応する内容／対応しない理由」を確認し、問題があれば開発Tに確認し、問題なければ「対応方針承認」に✅を入れる
+
+Check “Hướng xử lý FB” và “nội dung xử lý lý do không xử lý” do DevT viết, nếu có vấn đề thì xác nhận lại với DevT, nếu không có vấn đề thì đánh dấu ✅ vào “Phê duyệt phương hướng xử lý"
+
+**Criteria:**
+
+> ・すべてのFBに対して回答が記入されているか
+> ・FBに対して明確で具体的な回答になっているか
+>
+> ・Tất cả các FB đã có câu trả lời hay chưa?
+> ・Câu trả lời cho FB có rõ ràng và cụ thể hay không?
+
+### 7.0. POTが記入したスプリントゴール達成度とその理由を確認し、次のスプリントで具体的に何を改善するのかを開発T内で話し合い、「次のスプリントで改善すること」にベトナ
+
+**What to do:** POTが記入したスプリントゴール達成度とその理由を確認し、次のスプリントで具体的に何を改善するのかを開発T内で話し合い、「次のスプリントで改善すること」にベトナム語で記入する
+
+DevT kiểm tra mức độ đạt mục tiêu sprint và lý do đạt do POT ghi, thảo luận nội bộ xem cụ thể sẽ cải thiện những gì trong sprint tiếp theo, sau đó ghi bằng tiếng Việt vào mục “Những điểm cải thiện ở sprint tiếp theo”
+
+**Criteria:**
+
+> ・今回のスプリントでPOTからFBされたことを反映しているか
+> ・明確で具体的な内容になっているか
+>
+> ・Có phản ánh những nội dung đã được POT phản hồi trong sprint này hay không?
+> ・Nội dung có rõ ràng và cụ thể hay không?
+
+**Notes:**
+
+Dev team track
+
+### 8.0. 開発Tが記入した「次のスプリントで改善すること」を確認し、問題があれば指摘し、問題なければ「POTは上記の内容を妥当であると判断し、このスプリントレビューを承認
+
+**What to do:** 開発Tが記入した「次のスプリントで改善すること」を確認し、問題があれば指摘し、問題なければ「POTは上記の内容を妥当であると判断し、このスプリントレビューを承認します。」に✅を入れる
+
+Check “những điểm sẽ cải thiện ở sprint tiếp theo” do DevT viết, nếu có vấn đề thì chỉ ra, nếu không thì đánh dấu ✅ vào mục “POT đánh giá các nội dung trên là hợp lý và phê duyệt sprint review này.”
+
+**Criteria:**
+
+> 今回のスプリントでFBしたことが反映されているか
+> Các FB trong sprint này có được phản ánh hay không?
+
+### 8.0. POTのFBを聞く
+
+**What to do:** POTのFBを聞く
+Lắng nghe FB từ POT
+
+**Criteria:**
+
+-
+
+**Notes:**
+
+Dev team track
+
+### 9.0. （早く終わった場合）スプリントレビューでPOTが記入した内容すべてに日本語訳を追加する
+
+**What to do:** （早く終わった場合）スプリントレビューでPOTが記入した内容すべてに日本語訳を追加する
+
+(Nếu kết thúc sớm) bổ sung bản dịch tiếng Nhật cho toàn bộ nội dung mà POT đã ghi trong Sprint Review.
+
+**Criteria:**
+
+-
+
+### 9.0. （早く終わった場合）スプリントレビューで開発Tが記入した内容すべてに日本語訳を追加する
+
+**What to do:** （早く終わった場合）スプリントレビューで開発Tが記入した内容すべてに日本語訳を追加する
+
+(Nếu kết thúc sớm) Bổ sung bản dịch tiếng Nhật cho toàn bộ nội dung mà DevT đã ghi trong sprint review.
+
+**Criteria:**
+
+-
+
+**Notes:**
+
+Dev team track

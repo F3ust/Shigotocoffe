@@ -1,0 +1,13 @@
+Japanese sheet name	English CSV	rows	cols
+システム概要	system_overview.csv	1001	26
+画面遷移図	screen_transition_diagram.csv	78	53
+画面設計書	screen_design_document.csv	874	47
+仕様書チェックリスト	specification_checklist.csv	1003	25
+プロダクトバックログ	product_backlog.csv	1013	27
+プロダクトバックログチェックリスト	product_backlog_checklist.csv	988	24
+スプリントバックログ 1	sprint_backlog_1.csv	1022	40
+スプリントバックログ 2	sprint_backlog_2.csv	1021	42
+スプリントバックログ作成チェックリスト	sprint_backlog_creation_checklist.csv	1002	25
+スプリントプランニングチェックリスト	sprint_planning_checklist.csv	1006	21
+スプリントレビュー準備チェックリスト（開発T用）	sprint_review_prep_checklist_dev_team.csv	1009	27
+スプリントレビューチェックリスト	sprint_review_checklist.csv	1007	21
