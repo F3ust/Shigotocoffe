@@ -16,8 +16,11 @@ const DISTANCE_OPTIONS = [
 ] as const;
 
 const RATING_OPTIONS = [
+  { key: "rating_5", value: "5" },
   { key: "rating_4", value: "4" },
   { key: "rating_3", value: "3" },
+  { key: "rating_2", value: "2" },
+  { key: "rating_1", value: "1" },
 ] as const;
 
 export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelProps) {
