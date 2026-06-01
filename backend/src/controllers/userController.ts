@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { User } from "../models/User";
+import { Cafe } from "../models/Cafe";
 import {
   NotFoundError,
   ValidationError,
@@ -77,5 +79,80 @@ export async function updateProfile(req: Request, res: Response): Promise<void> 
   res.json({
     status: "success",
     data: user,
+  });
+}
+
+export async function addFavorite(req: Request, res: Response): Promise<void> {
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
+
+  const { cafeId } = req.params;
+  if (!cafeId || !mongoose.isValidObjectId(cafeId)) {
+    throw new ValidationError("Invalid cafe id");
+  }
+
+  const cafeExists = await Cafe.exists({ _id: cafeId });
+  if (!cafeExists) {
+    throw new NotFoundError(`Cafe not found: ${cafeId}`);
+  }
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  const alreadyFavorited = user.favorites.some((id) => id.toString() === cafeId);
+  if (!alreadyFavorited) {
+    user.favorites.push(new mongoose.Types.ObjectId(cafeId));
+    await user.save();
+  }
+
+  res.json({
+    status: "success",
+    data: user.favorites,
+  });
+}
+
+export async function removeFavorite(req: Request, res: Response): Promise<void> {
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
+
+  const { cafeId } = req.params;
+  if (!cafeId || !mongoose.isValidObjectId(cafeId)) {
+    throw new ValidationError("Invalid cafe id");
+  }
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  user.favorites = user.favorites.filter((id) => id.toString() !== cafeId);
+  await user.save();
+
+  res.json({
+    status: "success",
+    data: user.favorites,
+  });
+}
+
+export async function getFavorites(req: Request, res: Response): Promise<void> {
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
+
+  const user = await User.findById(req.user._id)
+    .populate("favorites")
+    .lean();
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  res.json({
+    status: "success",
+    data: user.favorites || [],
   });
 }
