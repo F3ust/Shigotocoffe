@@ -207,5 +207,11 @@
     "login_required_bookmark": "Vui lòng đăng nhập để lưu quán yêu thích.",
     "reply_empty_error": "Nội dung phản hồi không được để trống.",
     "owner_reply_section": "Phản hồi của chủ quán"
+  },
+  "loginModal": {
+    "title": "Yêu cầu đăng nhập",
+    "description": "Vui lòng đăng nhập để thực hiện hành động này.",
+    "login_btn": "Đăng nhập",
+    "close_btn": "Đóng"
   }
 }

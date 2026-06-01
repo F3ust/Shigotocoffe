@@ -13,6 +13,7 @@ import {
   removeFavorite,
 } from "../services/api";
 import type { Cafe, CafeQueryParams } from "../types/cafe";
+import LoginPromptModal from "../components/common/LoginPromptModal";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export default function HomePage() {
   const [total, setTotal] = useState(0);
   const [params, setParams] = useState<CafeQueryParams>({});
   const [filterOpen, setFilterOpen] = useState(false);
+  const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
 
   const isLoggedIn = getAuthToken() !== null;
@@ -43,7 +45,7 @@ export default function HomePage() {
 
   const handleToggleFavorite = async (cafeId: string) => {
     if (!isLoggedIn) {
-      navigate("/login");
+      setIsLoginPromptOpen(true);
       return;
     }
     const isFav = favoriteIds.includes(cafeId);
@@ -226,6 +228,8 @@ export default function HomePage() {
           </div>
         )}
       </section>
+
+      <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
     </div>
   );
 }

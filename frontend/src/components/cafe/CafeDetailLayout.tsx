@@ -14,6 +14,7 @@ import {
   updateCafe,
   uploadImage,
 } from "../../services/api";
+import LoginPromptModal from "../common/LoginPromptModal";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
@@ -196,6 +197,7 @@ export default function CafeDetailLayout({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const locale = lang === "ja" ? "ja-JP" : "vi-VN";
+  const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
 
   // ── favorite state ─────────────────────────────────────────────────────────
   const [isFavorite, setIsFavorite] = useState(false);
@@ -209,7 +211,7 @@ export default function CafeDetailLayout({
   }, [isLoggedIn, cafe._id]);
 
   const handleToggleFavorite = async () => {
-    if (!isLoggedIn) { navigate("/login"); return; }
+    if (!isLoggedIn) { setIsLoginPromptOpen(true); return; }
     try {
       if (isFavorite) { await removeFavorite(cafe._id); setIsFavorite(false); }
       else { await addFavorite(cafe._id); setIsFavorite(true); }
@@ -741,12 +743,13 @@ export default function CafeDetailLayout({
           {!isEditing && (
             !isLoggedIn ? (
               <div className="flex justify-center sm:justify-start">
-                <Link
-                  to="/login"
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-sage-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sage-700 sm:w-auto"
+                <button
+                  type="button"
+                  onClick={() => setIsLoginPromptOpen(true)}
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-sage-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sage-700 sm:w-auto cursor-pointer"
                 >
                   {t("cafeDetail.rate_cta")}
-                </Link>
+                </button>
               </div>
             ) : currentUser?.role === "owner" ? null : (
               <ReviewForm
@@ -807,6 +810,8 @@ export default function CafeDetailLayout({
           </div>
         </div>
       )}
+
+      <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
     </div>
   );
 }

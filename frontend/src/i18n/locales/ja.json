@@ -207,5 +207,11 @@
     "login_required_bookmark": "お気に入り機能を利用するにはログインが必要です。",
     "reply_empty_error": "返信内容は空にできません。",
     "owner_reply_section": "オーナーからの返信"
+  },
+  "loginModal": {
+    "title": "ログインが必要です",
+    "description": "この機能を利用するには、ログインしてください。",
+    "login_btn": "ログイン",
+    "close_btn": "閉じる"
   }
 }
