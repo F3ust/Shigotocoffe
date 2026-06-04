@@ -6,6 +6,10 @@ export interface IReview extends Document {
   cafe: Types.ObjectId;
   rating: number;
   comment: string;
+  reply?: {
+    comment: string;
+    createdAt: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,6 +20,10 @@ const reviewSchema = new Schema<IReview>(
     cafe: { type: Schema.Types.ObjectId, ref: "Cafe", required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
     comment: { type: String, required: true },
+    reply: {
+      comment: { type: String },
+      createdAt: { type: Date },
+    },
   },
   {
     timestamps: true,

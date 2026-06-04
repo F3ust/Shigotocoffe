@@ -4,6 +4,8 @@ import type { Cafe } from "../../types/cafe";
 
 interface CafeCardProps {
   cafe: Cafe;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
 function RatingStars({ rating }: { rating: number }) {
@@ -30,7 +32,7 @@ function RatingStars({ rating }: { rating: number }) {
   );
 }
 
-export default function CafeCard({ cafe }: CafeCardProps) {
+export default function CafeCard({ cafe, isFavorite = false, onToggleFavorite }: CafeCardProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as "ja" | "vi";
 
@@ -44,14 +46,26 @@ export default function CafeCard({ cafe }: CafeCardProps) {
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
         />
-        {/* Bookmark icon — spec element #14 */}
+        {/* Bookmark icon — heart shape */}
         <button
           id={`bookmark-${cafe._id}`}
-          className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-md border border-sage-300/50 bg-white/90 text-sage-600 shadow-sm backdrop-blur-sm transition-all hover:bg-sage-50 hover:text-sage-800"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (onToggleFavorite) {
+              onToggleFavorite();
+            }
+          }}
+          className={`absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-md border shadow-sm backdrop-blur-sm transition-all ${
+            isFavorite
+              ? "bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100"
+              : "bg-white/90 border-sage-300/50 text-sage-600 hover:bg-sage-50 hover:text-sage-800"
+          }`}
           aria-label="Bookmark"
+          title={isFavorite ? t("sprint4.bookmark_tooltip_remove") : t("sprint4.bookmark_tooltip_add")}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
           </svg>
         </button>
       </div>

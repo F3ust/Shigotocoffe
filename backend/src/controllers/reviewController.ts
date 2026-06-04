@@ -128,3 +128,47 @@ export async function deleteReview(req: Request, res: Response): Promise<void> {
 
   res.status(204).send();
 }
+
+export async function replyToReview(req: Request, res: Response): Promise<void> {
+  const { reviewId } = req.params;
+  if (!reviewId || !mongoose.isValidObjectId(reviewId)) {
+    throw new ValidationError("Invalid review id");
+  }
+
+  if (!req.user) {
+    throw new UnauthorizedError("Authentication required");
+  }
+
+  const { comment } = req.body as Record<string, unknown>;
+  if (typeof comment !== "string" || comment.trim() === "") {
+    throw new ValidationError("Reply comment must be a non-empty string");
+  }
+
+  const review = await Review.findById(reviewId);
+  if (!review) {
+    throw new NotFoundError(`Review not found: ${reviewId}`);
+  }
+
+  const cafe = await Cafe.findById(review.cafe);
+  if (!cafe) {
+    throw new NotFoundError(`Cafe not found for this review`);
+  }
+
+  // Authorization check: Only the owner of this cafe can reply
+  if (!cafe.owner || cafe.owner.toString() !== req.user._id) {
+    throw new ForbiddenError("Only the cafe owner can reply to this review");
+  }
+
+  review.reply = {
+    comment: comment.trim(),
+    createdAt: new Date(),
+  };
+
+  await review.save();
+  await review.populate({ path: "user", select: "name email" });
+
+  res.json({
+    status: "success",
+    data: review,
+  });
+}

@@ -11,6 +11,10 @@ export interface ReviewDTO {
   createdAt: string;
   /** ObjectId string when unpopulated; populated object from backend `populate("user")` */
   user?: string | ReviewUserRef;
+  reply?: {
+    comment: string;
+    createdAt: string;
+  };
 }
 
 export interface CafeReviewsResponse {

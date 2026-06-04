@@ -260,3 +260,32 @@ export async function logoutUserToServer(): Promise<void> {
     setAuthToken(null);
   }
 }
+
+export async function uploadImage(file: File): Promise<{ url: string }> {
+  const formData = new FormData();
+  formData.append("image", file);
+  const { data } = await api.post<{ status: string; data: { url: string } }>("/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data.data;
+}
+
+export async function replyToReview(reviewId: string, comment: string): Promise<void> {
+  await api.post(`/reviews/${reviewId}/reply`, { comment });
+}
+
+export async function addFavorite(cafeId: string): Promise<void> {
+  await api.post(`/users/favorites/${cafeId}`);
+}
+
+export async function removeFavorite(cafeId: string): Promise<void> {
+  await api.delete(`/users/favorites/${cafeId}`);
+}
+
+export async function fetchFavorites(): Promise<{ status: string; data: Cafe[] }> {
+  const { data } = await api.get<{ status: string; data: Cafe[] }>("/users/favorites");
+  return data;
+}
+

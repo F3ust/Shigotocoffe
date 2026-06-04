@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ReviewDTO } from "../../types/review";
 import { formatRelativeTime } from "../../utils/relativeTime";
@@ -5,6 +6,8 @@ import { formatRelativeTime } from "../../utils/relativeTime";
 interface ReviewSidebarProps {
   reviews: ReviewDTO[];
   lang: "ja" | "vi";
+  isOwner: boolean;
+  onReplyToReview?: (reviewId: string, comment: string) => Promise<void>;
 }
 
 function reviewAuthorName(review: ReviewDTO, anonymous: string): string {
@@ -14,9 +17,37 @@ function reviewAuthorName(review: ReviewDTO, anonymous: string): string {
   return anonymous;
 }
 
-export default function ReviewSidebar({ reviews, lang }: ReviewSidebarProps) {
+export default function ReviewSidebar({
+  reviews,
+  lang,
+  isOwner,
+  onReplyToReview,
+}: ReviewSidebarProps) {
   const { t } = useTranslation();
   const locale = lang === "ja" ? "ja-JP" : "vi-VN";
+
+  // Track reply input per reviewId
+  const [replyText, setReplyText] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState<Record<string, boolean>>({});
+
+  const handleSendReply = async (reviewId: string) => {
+    const text = replyText[reviewId]?.trim();
+    if (!text) {
+      alert(t("sprint4.reply_empty_error"));
+      return;
+    }
+    setSubmitting((prev) => ({ ...prev, [reviewId]: true }));
+    try {
+      if (onReplyToReview) {
+        await onReplyToReview(reviewId, text);
+      }
+      setReplyText((prev) => ({ ...prev, [reviewId]: "" }));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting((prev) => ({ ...prev, [reviewId]: false }));
+    }
+  };
 
   return (
     <aside className="flex h-full min-h-0 flex-col rounded-2xl border border-sage-100 bg-white shadow-sm lg:sticky lg:top-20 lg:max-h-[calc(100vh-5rem)]">
@@ -60,6 +91,56 @@ export default function ReviewSidebar({ reviews, lang }: ReviewSidebarProps) {
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">
                   {review.comment}
                 </p>
+
+                {/* Owner Reply Render */}
+                {review.reply && (
+                  <div className="mt-3 rounded-lg bg-sage-50 border border-sage-100 p-3 pl-4 border-l-4 border-l-sage-500 ml-2">
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="inline-flex items-center rounded-full bg-sage-100 px-2.5 py-0.5 text-[11px] font-bold text-sage-800">
+                        {t("sprint4.reply_badge")}
+                      </span>
+                      {review.reply.createdAt && (
+                        <span className="text-[10px] text-gray-400">
+                          {formatRelativeTime(review.reply.createdAt, lang)}
+                        </span>
+                      )}
+                    </div>
+                    <p className="whitespace-pre-wrap text-xs text-gray-700 leading-relaxed">
+                      {review.reply.comment}
+                    </p>
+                  </div>
+                )}
+
+                {/* Owner Reply Composition Box */}
+                {isOwner && !review.reply && (
+                  <div className="mt-3 border-t border-dashed border-gray-200 pt-3">
+                    <p className="text-xs font-semibold text-gray-700 mb-1.5">
+                      {t("sprint4.owner_reply_section")}
+                    </p>
+                    <div className="flex gap-2">
+                      <textarea
+                        rows={1}
+                        value={replyText[review._id] || ""}
+                        onChange={(e) =>
+                          setReplyText((prev) => ({
+                            ...prev,
+                            [review._id]: e.target.value,
+                          }))
+                        }
+                        placeholder={t("sprint4.reply_placeholder")}
+                        className="flex-1 rounded-lg border border-gray-200 p-2 text-xs focus:border-sage-500 focus:outline-none resize-none bg-white"
+                      />
+                      <button
+                        type="button"
+                        disabled={submitting[review._id]}
+                        onClick={() => handleSendReply(review._id)}
+                        className="rounded-lg bg-sage-600 hover:bg-sage-700 disabled:opacity-50 text-white px-3 py-1 text-xs font-semibold transition-colors shadow-sm self-end"
+                      >
+                        {submitting[review._id] ? "..." : t("sprint4.reply_submit")}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

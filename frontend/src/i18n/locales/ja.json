@@ -7,7 +7,8 @@
     "register": "新規登録",
     "info": "個人情報",
     "logout": "ログアウト",
-    "language": "言語"
+    "language": "言語",
+    "favorites": "お気に入り"
   },
   "hero": {
     "title": "ハノイのワークカフェを\n見つけよう"
@@ -26,8 +27,11 @@
     "distance_3_5km": "3 - 5km",
     "distance_5km": "5km以上",
     "rating": "評価",
-    "rating_3": "3つ星以上",
+    "rating_5": "5つ星",
     "rating_4": "4つ星以上",
+    "rating_3": "3つ星以上",
+    "rating_2": "2つ星以上",
+    "rating_1": "1つ星以上",
     "wifi": "Wi-Fiが強い",
     "outlets": "コンセントが多い",
     "quiet": "静か",
@@ -71,7 +75,8 @@
     "status_closed_detail": "現在閉店中です。",
     "rate_cta": "レビューする",
     "no_reviews": "まだレビューはありません。",
-    "anonymous": "匿名"
+    "anonymous": "匿名",
+    "section_images": "店舗写真"
   },
   "footer": {
     "copyright": "© 2026 仕事コーヒー ハノイのワークカフェを探す。",
@@ -111,7 +116,10 @@
     "show_password": "パスワードを表示",
     "hide_password": "パスワードを隠す",
     "show_password_short": "表示",
-    "hide_password_short": "非表示"
+    "hide_password_short": "非表示",
+    "success_login": "ログインに成功しました！",
+    "success_signup": "新規登録に成功しました！",
+    "redirecting": "移行中..."
   },
   "profile": {
     "title": "ユーザープロフィール",
@@ -171,6 +179,42 @@
     "delete_confirm": "このカフェを削除してもよろしいですか？この操作は取り消せません。",
     "my_cafes": "所有カフェ一覧",
     "no_cafes": "まだ登録されたカフェはありません。",
-    "add_new_cafe": "新しくカフェを登録する"
+    "add_new_cafe": "新しくカフェを登録する",
+    "image_url": "代表画像 / カバー画像 (URL)",
+    "menu_image_placeholder": "商品画像 (URL)",
+    "add_image": "画像を追加"
+  },
+  "auth_errors": {
+    "Invalid email or password": "メールアドレスまたはパスワードが正しくありません",
+    "Email already registered": "このメールアドレスは既に登録されています",
+    "Password must be at least 6 characters": "パスワードは6文字以上である必要があります",
+    "Token has been logged out": "ログアウト済みのセッショントークンです",
+    "Invalid or expired token": "トークンが無効であるか期限切れです",
+    "Requires \"owner\" role": "オーナー権限が必要です",
+    "Authentication required": "ログインが必要です"
+  },
+  "sprint4": {
+    "edit_visually": "直感的に編集",
+    "reply_badge": "店舗オーナーからの返信",
+    "reply_placeholder": "返信を入力してください...",
+    "reply_submit": "返信を送信",
+    "reply_success": "返信の送信に成功しました。",
+    "upload_button": "画像アップロード",
+    "upload_success": "アップロードに成功しました。",
+    "upload_failed": "アップロードに失敗しました。",
+    "upload_drag_drop": "ドラッグ＆ドロップまたはクリックで画像を選択",
+    "bookmark_tooltip_add": "お気に入りに追加",
+    "bookmark_tooltip_remove": "お気に入りから削除",
+    "favorites_title": "お気に入りカフェ",
+    "no_favorites": "お気に入りのカフェはまだありません。",
+    "login_required_bookmark": "お気に入り機能を利用するにはログインが必要です。",
+    "reply_empty_error": "返信内容は空にできません。",
+    "owner_reply_section": "オーナーからの返信"
+  },
+  "loginModal": {
+    "title": "ログインが必要です",
+    "description": "この機能を利用するには、ログインしてください。",
+    "login_btn": "ログイン",
+    "close_btn": "閉じる"
   }
 }

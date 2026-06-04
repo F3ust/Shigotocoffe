@@ -7,7 +7,8 @@
     "register": "Đăng ký",
     "info": "Thông tin",
     "logout": "Đăng xuất",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "favorites": "Yêu thích"
   },
   "hero": {
     "title": "TÌM KIẾM QUÁN CÀ PHÊ\nLÀM VIỆC TẠI HÀ NỘI"
@@ -26,8 +27,11 @@
     "distance_3_5km": "3 - 5km",
     "distance_5km": "Trên 5km",
     "rating": "Đánh giá",
-    "rating_3": "3 sao trở lên",
+    "rating_5": "5 sao",
     "rating_4": "4 sao trở lên",
+    "rating_3": "3 sao trở lên",
+    "rating_2": "2 sao trở lên",
+    "rating_1": "1 sao trở lên",
     "wifi": "Wi-Fi mạnh",
     "outlets": "Nhiều ổ cắm",
     "quiet": "Yên tĩnh",
@@ -71,7 +75,8 @@
     "status_closed_detail": "Quán đã đóng cửa.",
     "rate_cta": "Đánh giá",
     "no_reviews": "Chưa có đánh giá nào.",
-    "anonymous": "Ẩn danh"
+    "anonymous": "Ẩn danh",
+    "section_images": "Hình ảnh quán"
   },
   "footer": {
     "copyright": "© 2026 仕事コーヒー. Tìm quán cafe để làm việc tại Hà Nội.",
@@ -111,7 +116,10 @@
     "show_password": "Hiển thị mật khẩu",
     "hide_password": "Ẩn mật khẩu",
     "show_password_short": "Hiện",
-    "hide_password_short": "Ẩn"
+    "hide_password_short": "Ẩn",
+    "success_login": "Đăng nhập thành công!",
+    "success_signup": "Đăng ký thành công!",
+    "redirecting": "Đang chuyển hướng..."
   },
   "profile": {
     "title": "Hồ sơ cá nhân",
@@ -171,6 +179,42 @@
     "delete_confirm": "Bạn có chắc chắn muốn xóa quán này? Thao tác này không thể hoàn tác.",
     "my_cafes": "Danh sách quán của tôi",
     "no_cafes": "Bạn chưa đăng ký quán nào.",
-    "add_new_cafe": "Đăng ký thêm quán mới"
+    "add_new_cafe": "Đăng ký thêm quán mới",
+    "image_url": "Ảnh đại diện / Ảnh bìa (URL)",
+    "menu_image_placeholder": "Ảnh món ăn (URL)",
+    "add_image": "Thêm ảnh"
+  },
+  "auth_errors": {
+    "Invalid email or password": "Email hoặc mật khẩu không chính xác",
+    "Email already registered": "Email này đã được đăng ký",
+    "Password must be at least 6 characters": "Mật khẩu phải có ít nhất 6 ký tự",
+    "Token has been logged out": "Phiên làm việc đã đăng xuất",
+    "Invalid or expired token": "Mã xác thực không hợp lệ hoặc hết hạn",
+    "Requires \"owner\" role": "Yêu cầu quyền chủ quán",
+    "Authentication required": "Yêu cầu đăng nhập"
+  },
+  "sprint4": {
+    "edit_visually": "Chỉnh sửa trực quan",
+    "reply_badge": "Chủ quán phản hồi",
+    "reply_placeholder": "Viết phản hồi của bạn...",
+    "reply_submit": "Gửi phản hồi",
+    "reply_success": "Gửi phản hồi thành công.",
+    "upload_button": "Tải ảnh từ máy",
+    "upload_success": "Tải ảnh thành công.",
+    "upload_failed": "Tải ảnh thất bại.",
+    "upload_drag_drop": "Kéo thả hoặc click để chọn ảnh",
+    "bookmark_tooltip_add": "Thêm vào yêu thích",
+    "bookmark_tooltip_remove": "Xóa khỏi yêu thích",
+    "favorites_title": "Quán yêu thích của tôi",
+    "no_favorites": "Bạn chưa yêu thích quán nào.",
+    "login_required_bookmark": "Vui lòng đăng nhập để lưu quán yêu thích.",
+    "reply_empty_error": "Nội dung phản hồi không được để trống.",
+    "owner_reply_section": "Phản hồi của chủ quán"
+  },
+  "loginModal": {
+    "title": "Yêu cầu đăng nhập",
+    "description": "Vui lòng đăng nhập để thực hiện hành động này.",
+    "login_btn": "Đăng nhập",
+    "close_btn": "Đóng"
   }
 }

@@ -134,22 +134,14 @@ export default function Header() {
                         {accountName}
                       </div>
                     )}
-                    <Link
-                      to="/profile"
-                      id="menu-profile"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50 border-b border-gray-100"
-                    >
-                      👤 {t("profile.title")}
-                    </Link>
-                    {userRole === "owner" && (
+                    {userRole !== "owner" && (
                       <Link
-                        to="/manage"
-                        id="menu-manage"
+                        to="/profile"
+                        id="menu-profile"
                         onClick={() => setMenuOpen(false)}
                         className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-sage-50 border-b border-gray-100"
                       >
-                        🛠️ {t("manage.title")}
+                        👤 {t("profile.title")}
                       </Link>
                     )}
                     <button

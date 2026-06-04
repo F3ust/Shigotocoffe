@@ -1,0 +1,13 @@
+CSV	Markdown	action_count
+product_backlog.csv	product_backlog.md	12
+product_backlog_checklist.csv	product_backlog_checklist.md	7
+screen_design_document.csv	screen_design_document.md	168
+screen_transition_diagram.csv	screen_transition_diagram.md	12
+specification_checklist.csv	specification_checklist.md	23
+sprint_backlog_1.csv	sprint_backlog_1.md	14
+sprint_backlog_2.csv	sprint_backlog_2.md	13
+sprint_backlog_creation_checklist.csv	sprint_backlog_creation_checklist.md	11
+sprint_planning_checklist.csv	sprint_planning_checklist.md	11
+sprint_review_checklist.csv	sprint_review_checklist.md	15
+sprint_review_prep_checklist_dev_team.csv	sprint_review_prep_checklist_dev_team.md	14
+system_overview.csv	system_overview.md	24

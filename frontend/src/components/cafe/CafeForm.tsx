@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { Cafe, MenuItem } from "../../types/cafe";
+import { uploadImage } from "../../services/api";
 
 interface CafeFormProps {
   initialData?: Cafe;
@@ -10,17 +11,17 @@ interface CafeFormProps {
 
 const VALID_HASHTAGS = ["wifi", "outlets", "quiet", "japanese", "noTimeLimit"];
 const DISTRICTS = [
-  "Ba Dinh",
-  "Hoan Kiem",
-  "Tay Ho",
-  "Hai Ba Trung",
-  "Dong Da",
-  "Cau Giay",
-  "Thanh Xuan",
-  "Long Bien",
-  "Ha Dong",
-  "Nam Tu Liem",
-  "Bac Tu Liem"
+  "Hoàn Kiếm",
+  "Ba Đình",
+  "Đống Đa",
+  "Tây Hồ",
+  "Cầu Giấy",
+  "Hai Bà Trưng",
+  "Thanh Xuân",
+  "Long Biên",
+  "Hà Đông",
+  "Nam Từ Liêm",
+  "Bắc Từ Liêm"
 ];
 
 export default function CafeForm({
@@ -46,8 +47,7 @@ export default function CafeForm({
   
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [menu, setMenu] = useState<MenuItem[]>([]);
-  
-  const [imageUrl, setImageUrl] = useState(""); // single image URL input
+  const [images, setImages] = useState<string[]>([""]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,7 +71,7 @@ export default function CafeForm({
 
       setHashtags(initialData.hashtags || []);
       setMenu(initialData.menu || []);
-      setImageUrl(initialData.images?.[0] || "");
+      setImages(initialData.images?.length ? initialData.images : [""]);
     }
   }, [initialData]);
 
@@ -81,6 +81,22 @@ export default function CafeForm({
     } else {
       setHashtags((prev) => prev.filter((t) => t !== tag));
     }
+  };
+
+  const handleAddImage = () => {
+    setImages((prev) => [...prev, ""]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    if (images.length <= 1) {
+      setImages([""]);
+    } else {
+      setImages((prev) => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleImageChange = (index: number, value: string) => {
+    setImages((prev) => prev.map((img, i) => (i === index ? value : img)));
   };
 
   const handleAddMenuItem = () => {
@@ -112,7 +128,7 @@ export default function CafeForm({
         type: "Point",
         coordinates: [Number(lng), Number(lat)]
       },
-      images: imageUrl ? [imageUrl] : [],
+      images: images.map((img) => img.trim()).filter(Boolean),
       hashtags,
       menu: menu.filter((item) => item.name.trim() !== "")
     };
@@ -120,7 +136,8 @@ export default function CafeForm({
     try {
       await onSubmit(payload);
     } catch (err: any) {
-      setError(err?.response?.data?.message || t("auth.error_generic"));
+      const msg = err?.response?.data?.message || err?.message || t("auth.error_generic");
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -167,50 +184,22 @@ export default function CafeForm({
           </div>
         </div>
 
-        {/* District & Location */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="space-y-1">
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              {t("manage.district")} *
-            </label>
-            <select
-              value={district}
-              onChange={(e) => setDistrict(e.target.value)}
-              className="w-full rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500 bg-white"
-            >
-              {DISTRICTS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="space-y-1">
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              {t("manage.lat")} *
-            </label>
-            <input
-              type="number"
-              step="any"
-              required
-              value={lat}
-              onChange={(e) => setLat(Number(e.target.value))}
-              className="w-full rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              {t("manage.lng")} *
-            </label>
-            <input
-              type="number"
-              step="any"
-              required
-              value={lng}
-              onChange={(e) => setLng(Number(e.target.value))}
-              className="w-full rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500"
-            />
-          </div>
+        {/* District */}
+        <div className="space-y-1">
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            {t("manage.district")} *
+          </label>
+          <select
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
+            className="w-full rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500 bg-white"
+          >
+            {DISTRICTS.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Bilingual Addresses */}
@@ -241,8 +230,8 @@ export default function CafeForm({
           </div>
         </div>
 
-        {/* Times & Images */}
-        <div className="grid gap-4 sm:grid-cols-3">
+        {/* Times */}
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {t("manage.open_time")} *
@@ -269,17 +258,61 @@ export default function CafeForm({
               className="w-full rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500"
             />
           </div>
-          <div className="space-y-1">
+        </div>
+
+        {/* Cafe Images */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between border-b border-sage-100 pb-2">
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              画像 URL
+              {t("manage.image_url")}
             </label>
-            <input
-              type="text"
-              placeholder="https://example.com/image.jpg"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500"
-            />
+            <button
+              type="button"
+              onClick={handleAddImage}
+              className="text-xs font-bold text-sage-600 bg-sage-50 hover:bg-sage-100 px-2.5 py-1 rounded-md transition-colors"
+            >
+              + {t("manage.add_image")}
+            </button>
+          </div>
+          <div className="space-y-2">
+            {images.map((img, idx) => (
+              <div key={idx} className="flex flex-col gap-2 bg-cream-50/20 p-3 rounded-xl border border-gray-100">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="https://example.com/image.jpg"
+                    value={img}
+                    onChange={(e) => handleImageChange(idx, e.target.value)}
+                    className="flex-1 rounded-xl border border-sage-200 px-3.5 py-2.5 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500 bg-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(idx)}
+                    className="text-xs font-semibold text-red-600 hover:bg-red-50 px-2.5 py-2.5 rounded-xl border border-transparent hover:border-red-100 transition-colors"
+                  >
+                    {t("manage.remove")}
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const res = await uploadImage(file);
+                          handleImageChange(idx, res.url);
+                        } catch (err) {
+                          alert(t("sprint4.upload_failed"));
+                        }
+                      }
+                    }}
+                    className="text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-sage-50 file:text-sage-700 hover:file:bg-sage-100 cursor-pointer"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -371,6 +404,31 @@ export default function CafeForm({
                     value={item.price}
                     onChange={(e) => handleMenuItemChange(index, "price", Number(e.target.value))}
                     className="w-full rounded-lg border border-sage-200 px-3 py-1.5 text-sm outline-none focus:border-sage-500"
+                  />
+                </div>
+                <div className="flex-1 min-w-[180px] space-y-1.5">
+                  <input
+                    type="text"
+                    placeholder={t("manage.menu_image_placeholder")}
+                    value={item.image || ""}
+                    onChange={(e) => handleMenuItemChange(index, "image", e.target.value)}
+                    className="w-full rounded-lg border border-sage-200 px-3 py-1.5 text-sm outline-none focus:border-sage-500 bg-white"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const res = await uploadImage(file);
+                          handleMenuItemChange(index, "image", res.url);
+                        } catch (err) {
+                          alert(t("sprint4.upload_failed"));
+                        }
+                      }
+                    }}
+                    className="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-sage-50 file:text-sage-700 hover:file:bg-sage-100 cursor-pointer"
                   />
                 </div>
                 <button
