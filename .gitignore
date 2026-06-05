@@ -49,3 +49,7 @@ spec_output.txt
 read_spec.py
 *.tsbuildinfo
 
+# Uploaded files
+backend/uploads/
+
+
