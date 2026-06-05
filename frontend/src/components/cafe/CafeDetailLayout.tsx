@@ -738,13 +738,12 @@ export default function CafeDetailLayout({
             </DetailSection>
           )}
 
-          {/* Owner edit/save bar */}
           {isOwner && !isEditing && (
             <button
               onClick={handleEnterEdit}
               className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white py-3 text-sm font-semibold text-sage-700 shadow-sm hover:bg-sage-50 transition-colors"
             >
-              ✏️ {t("manage.edit_title")}
+              ✏️ {t("sprint4.edit_visually")}
             </button>
           )}
         </div>
