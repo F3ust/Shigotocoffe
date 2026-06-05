@@ -8,6 +8,7 @@ build/
 # Environment
 .env
 .env.local
+.env.production
 .env.*.local
 
 # Logs
@@ -52,8 +53,6 @@ read_spec.py
 # Uploaded files
 backend/uploads/
 
-# Vercel
-.vercel/
 
 # Logs
 yarn-error.log*
