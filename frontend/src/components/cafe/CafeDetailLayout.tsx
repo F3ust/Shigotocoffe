@@ -737,27 +737,6 @@ export default function CafeDetailLayout({
             </DetailSection>
           )}
 
-          {/* Review form (users only, not owners, not when editing) */}
-          {!isEditing && (
-            !isLoggedIn ? (
-              <div className="flex justify-center sm:justify-start">
-                <button
-                  type="button"
-                  onClick={() => setIsLoginPromptOpen(true)}
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-sage-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sage-700 sm:w-auto cursor-pointer"
-                >
-                  {t("cafeDetail.rate_cta")}
-                </button>
-              </div>
-            ) : currentUser?.role === "owner" ? null : (
-              <ReviewForm
-                existingReview={existingReview}
-                onSubmit={onSubmitReview}
-                onDelete={onDeleteReview}
-              />
-            )
-          )}
-
           {/* Owner edit/save bar */}
           {isOwner && !isEditing && (
             <button
@@ -774,7 +753,28 @@ export default function CafeDetailLayout({
           lang={lang}
           isOwner={isOwner}
           onReplyToReview={onReplyToReview}
-        />
+        >
+          {/* Review form (users only, not owners, not when editing) */}
+          {!isEditing && (
+            !isLoggedIn ? (
+              <div className="flex justify-center w-full">
+                <button
+                  type="button"
+                  onClick={() => setIsLoginPromptOpen(true)}
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-sage-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sage-700 cursor-pointer"
+                >
+                  {t("cafeDetail.rate_cta")}
+                </button>
+              </div>
+            ) : currentUser?.role === "owner" ? null : (
+              <ReviewForm
+                existingReview={existingReview}
+                onSubmit={onSubmitReview}
+                onDelete={onDeleteReview}
+              />
+            )
+          )}
+        </ReviewSidebar>
       </div>
 
       {/* ── Sticky save/cancel footer in edit mode ────────────────────────── */}
