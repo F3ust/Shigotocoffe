@@ -4,12 +4,20 @@ import path from "path";
 import fs from "fs";
 import { ValidationError, UnauthorizedError } from "../utils/errors";
 
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
+const isVercel = !!process.env.VERCEL;
+const UPLOAD_DIR = isVercel
+  ? path.join("/tmp", "uploads")
+  : path.join(process.cwd(), "uploads");
 
 // Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  }
+} catch (err) {
+  console.warn("Could not create upload directory (expected in serverless read-only filesystem):", err);
 }
+
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
