@@ -49,3 +49,13 @@ spec_output.txt
 read_spec.py
 *.tsbuildinfo
 
+# Uploaded files
+backend/uploads/
+
+# Vercel
+.vercel/
+
+# Logs
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*

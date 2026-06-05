@@ -14,10 +14,11 @@ import {
   uploadImage,
 } from "../../services/api";
 import LoginPromptModal from "../common/LoginPromptModal";
+import { CAFE_HASHTAG_IDS } from "../../constants/cafeHashtags";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
-const VALID_HASHTAGS = ["wifi", "outlets", "quiet", "japanese", "noTimeLimit"];
+
 const DISTRICTS = [
   "Hoàn Kiếm",
   "Ba Đình",
@@ -582,7 +583,7 @@ export default function CafeDetailLayout({
             <DetailSection title={t("cafeDetail.section_tags")} icon={<IconHash />}>
               {isEditing ? (
                 <div className="flex flex-wrap gap-3">
-                  {VALID_HASHTAGS.map((tag) => (
+                  {CAFE_HASHTAG_IDS.map((tag) => (
                     <label key={tag} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                       <input
                         type="checkbox"
@@ -594,7 +595,7 @@ export default function CafeDetailLayout({
                         className="rounded text-sage-600 focus:ring-sage-500 border-sage-300"
                       />
                       <span className="rounded-lg border border-sage-200 bg-sage-50 px-2.5 py-1 text-xs font-semibold text-sage-800">
-                        #{t(`filter.${tag}`)}
+                        #{tag}
                       </span>
                     </label>
                   ))}
@@ -737,14 +738,30 @@ export default function CafeDetailLayout({
             </DetailSection>
           )}
 
+          {isOwner && !isEditing && (
+            <button
+              onClick={handleEnterEdit}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white py-3 text-sm font-semibold text-sage-700 shadow-sm hover:bg-sage-50 transition-colors"
+            >
+              ✏️ {t("sprint4.edit_visually")}
+            </button>
+          )}
+        </div>
+
+        <ReviewSidebar
+          reviews={reviews}
+          lang={lang}
+          isOwner={isOwner}
+          onReplyToReview={onReplyToReview}
+        >
           {/* Review form (users only, not owners, not when editing) */}
           {!isEditing && (
             !isLoggedIn ? (
-              <div className="flex justify-center sm:justify-start">
+              <div className="flex justify-center w-full">
                 <button
                   type="button"
                   onClick={() => setIsLoginPromptOpen(true)}
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-sage-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sage-700 sm:w-auto cursor-pointer"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-sage-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sage-700 cursor-pointer"
                 >
                   {t("cafeDetail.rate_cta")}
                 </button>
@@ -757,24 +774,7 @@ export default function CafeDetailLayout({
               />
             )
           )}
-
-          {/* Owner edit/save bar */}
-          {isOwner && !isEditing && (
-            <button
-              onClick={handleEnterEdit}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white py-3 text-sm font-semibold text-sage-700 shadow-sm hover:bg-sage-50 transition-colors"
-            >
-              ✏️ {t("manage.edit_title")}
-            </button>
-          )}
-        </div>
-
-        <ReviewSidebar
-          reviews={reviews}
-          lang={lang}
-          isOwner={isOwner}
-          onReplyToReview={onReplyToReview}
-        />
+        </ReviewSidebar>
       </div>
 
       {/* ── Sticky save/cancel footer in edit mode ────────────────────────── */}

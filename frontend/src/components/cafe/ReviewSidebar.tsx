@@ -8,6 +8,7 @@ interface ReviewSidebarProps {
   lang: "ja" | "vi";
   isOwner: boolean;
   onReplyToReview?: (reviewId: string, comment: string) => Promise<void>;
+  children?: React.ReactNode;
 }
 
 function reviewAuthorName(review: ReviewDTO, anonymous: string): string {
@@ -22,6 +23,7 @@ export default function ReviewSidebar({
   lang,
   isOwner,
   onReplyToReview,
+  children,
 }: ReviewSidebarProps) {
   const { t } = useTranslation();
   const locale = lang === "ja" ? "ja-JP" : "vi-VN";
@@ -56,6 +58,12 @@ export default function ReviewSidebar({
           {t("cafeDetail.comments_heading", { count: reviews.length })}
         </h2>
       </div>
+
+      {children && (
+        <div className="border-b border-sage-100 px-5 py-4 bg-sage-50/20">
+          {children}
+        </div>
+      )}
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
         {reviews.length === 0 ? (

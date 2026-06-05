@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { Cafe, MenuItem } from "../../types/cafe";
 import { uploadImage } from "../../services/api";
+import { CAFE_HASHTAG_IDS } from "../../constants/cafeHashtags";
 
 interface CafeFormProps {
   initialData?: Cafe;
@@ -9,7 +10,7 @@ interface CafeFormProps {
   onCancel: () => void;
 }
 
-const VALID_HASHTAGS = ["wifi", "outlets", "quiet", "japanese", "noTimeLimit"];
+
 const DISTRICTS = [
   "Hoàn Kiếm",
   "Ba Đình",
@@ -350,7 +351,7 @@ export default function CafeForm({
             {t("manage.hashtags")}
           </label>
           <div className="flex flex-wrap gap-4">
-            {VALID_HASHTAGS.map((tag) => (
+            {CAFE_HASHTAG_IDS.map((tag) => (
               <label key={tag} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                 <input
                   type="checkbox"
@@ -358,7 +359,7 @@ export default function CafeForm({
                   onChange={(e) => handleHashtagChange(tag, e.target.checked)}
                   className="rounded text-sage-600 focus:ring-sage-500 border-sage-300"
                 />
-                {t(`filter.${tag}`)}
+                #{tag}
               </label>
             ))}
           </div>
