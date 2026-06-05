@@ -14,10 +14,11 @@ import {
   uploadImage,
 } from "../../services/api";
 import LoginPromptModal from "../common/LoginPromptModal";
+import { CAFE_HASHTAG_IDS } from "../../constants/cafeHashtags";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
-const VALID_HASHTAGS = ["wifi", "outlets", "quiet", "japanese", "noTimeLimit"];
+
 const DISTRICTS = [
   "Hoàn Kiếm",
   "Ba Đình",
@@ -582,7 +583,7 @@ export default function CafeDetailLayout({
             <DetailSection title={t("cafeDetail.section_tags")} icon={<IconHash />}>
               {isEditing ? (
                 <div className="flex flex-wrap gap-3">
-                  {VALID_HASHTAGS.map((tag) => (
+                  {CAFE_HASHTAG_IDS.map((tag) => (
                     <label key={tag} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                       <input
                         type="checkbox"
@@ -594,7 +595,7 @@ export default function CafeDetailLayout({
                         className="rounded text-sage-600 focus:ring-sage-500 border-sage-300"
                       />
                       <span className="rounded-lg border border-sage-200 bg-sage-50 px-2.5 py-1 text-xs font-semibold text-sage-800">
-                        #{t(`filter.${tag}`)}
+                        #{tag}
                       </span>
                     </label>
                   ))}

@@ -27,10 +27,17 @@ export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelPro
   const { t } = useTranslation();
   const [minRating, setMinRating] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedDistances, setSelectedDistances] = useState<string[]>([]);
 
   function toggleTag(tagId: string) {
     setSelectedTags((prev) =>
       prev.includes(tagId) ? prev.filter((x) => x !== tagId) : [...prev, tagId]
+    );
+  }
+
+  function toggleDistance(key: string) {
+    setSelectedDistances((prev) =>
+      prev.includes(key) ? prev.filter((x) => x !== key) : [...prev, key]
     );
   }
 
@@ -41,12 +48,11 @@ export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelPro
   function handleClear() {
     setMinRating("");
     setSelectedTags([]);
+    setSelectedDistances([]);
     onClear();
   }
 
   if (!isOpen) return null;
-
-  const distanceComingSoon = t("filter.distance_coming_soon");
 
   return (
     <div className="absolute right-0 top-full z-40 mt-2 w-72 rounded-xl border border-gray-200 bg-white p-5 shadow-xl">
@@ -54,20 +60,20 @@ export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelPro
         {t("filter.title")}
       </h3>
 
-      <div className="mb-4 space-y-2" title={distanceComingSoon}>
-        <h4 className="text-sm font-bold text-gray-500">
+      <div className="mb-4 space-y-2">
+        <h4 className="text-sm font-bold text-gray-800">
           {t("filter.distance")}
         </h4>
         {DISTANCE_OPTIONS.map((key) => (
           <label
             key={key}
-            className="flex cursor-not-allowed items-center gap-2.5 text-sm text-gray-400"
+            className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-700"
           >
             <input
               type="checkbox"
-              checked={false}
-              disabled
-              className="h-4 w-4 rounded border-gray-300 accent-sage-600 disabled:opacity-50"
+              checked={selectedDistances.includes(key)}
+              onChange={() => toggleDistance(key)}
+              className="h-4 w-4 rounded border-gray-300 text-sage-600 accent-sage-600"
             />
             {t(`filter.${key}`)}
           </label>
@@ -88,7 +94,7 @@ export default function FilterPanel({ onApply, onClear, isOpen }: FilterPanelPro
               onChange={() => toggleTag(id)}
               className="h-4 w-4 rounded border-gray-300 text-sage-600 accent-sage-600"
             />
-            {t(`filter.${id}`)}
+            #{id}
           </label>
         ))}
       </div>
