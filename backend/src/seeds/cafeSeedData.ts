@@ -311,4 +311,129 @@ export const cafeSeedData = [
     reviewCount: 38,
     location: { type: "Point" as const, coordinates: [105.8189, 21.0301] },
   },
+  {
+    name: { ja: "タインスアン・ワークスペース", vi: "Thanh Xuân Workspace" },
+    description: {
+      ja: "ハノイ西部のノマドワーカーに最適なコワーキングカフェ。静かな環境 và 高速Wi-Fiを完備。",
+      vi: "Quán cà phê làm việc lý tưởng cho người làm việc tự do phía Tây Hà Nội. Không gian yên tĩnh và Wi-Fi tốc độ cao.",
+    },
+    address: {
+      ja: "234 グエンチャイ通り、タインスアン区、ハノイ",
+      vi: "234 Nguyễn Trãi, Thanh Xuân, Hà Nội",
+    },
+    district: "Thanh Xuân",
+    openingHours: { open: "08:00", close: "22:00" },
+    isOpen: true,
+    images: [
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600",
+    ],
+    menu: [
+      { name: "Cà phê sữa đá", price: 35000 },
+      { name: "Matcha Latte", price: 50000 },
+    ],
+    hashtags: ["wifi", "outlets", "quiet"],
+    averageRating: 4.5,
+    reviewCount: 12,
+    location: { type: "Point" as const, coordinates: [105.8019, 20.9982] },
+  },
+  {
+    name: { ja: "ロンビエン・リバーサイド", vi: "Long Biên Riverside Cafe" },
+    description: {
+      ja: "紅河の景色を望む、広々としたカフェ。静かに本を読んだり仕事をするのに最適です。",
+      vi: "Không gian rộng rãi ven sông Hồng. Nơi tuyệt vời để đọc sách hoặc tập trung làm việc yên tĩnh.",
+    },
+    address: {
+      ja: "45 グエンヴァンクー通り、ロンビエン区、ハノイ",
+      vi: "45 Nguyễn Văn Cừ, Long Biên, Hà Nội",
+    },
+    district: "Long Biên",
+    openingHours: { open: "07:30", close: "22:30" },
+    isOpen: true,
+    images: [
+      "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600",
+    ],
+    menu: [
+      { name: "Cold Brew", price: 45000 },
+      { name: "Croissant", price: 30000 },
+    ],
+    hashtags: ["wifi", "quiet", "noTimeLimit"],
+    averageRating: 4.3,
+    reviewCount: 8,
+    location: { type: "Point" as const, coordinates: [105.8724, 21.0435] },
+  },
+  {
+    name: { ja: "ハドン・グリーンカフェ", vi: "Hà Đông Green Cafe" },
+    description: {
+      ja: "緑あふれる静かなカフェ。広い作業デスクと十分な電源が完備されています。",
+      vi: "Quán cà phê nhiều cây xanh thoáng mát. Có bàn làm việc rộng và đầy đủ ổ cắm điện.",
+    },
+    address: {
+      ja: "102 トランフー通り、ハドン区、ハノイ",
+      vi: "102 Trần Phú, Hà Đông, Hà Nội",
+    },
+    district: "Hà Đông",
+    openingHours: { open: "08:00", close: "22:00" },
+    isOpen: true,
+    images: [
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600",
+    ],
+    menu: [
+      { name: "Cà phê đen đá", price: 29000 },
+      { name: "Trà đào cam sả", price: 45000 },
+    ],
+    hashtags: ["wifi", "outlets", "noTimeLimit"],
+    averageRating: 4.4,
+    reviewCount: 15,
+    location: { type: "Point" as const, coordinates: [105.7831, 20.9785] },
+  },
+  {
+    name: { ja: "ナムトゥリエム・テックハブ", vi: "Nam Từ Liêm Tech Hub" },
+    description: {
+      ja: "モダンな内装のITワーカー向けカフェ。個室風ブースやミーティングスペースもあります。",
+      vi: "Thiết kế hiện đại dành cho lập trình viên và người làm việc số. Có các góc làm việc cá nhân và phòng họp.",
+    },
+    address: {
+      ja: "15 ファムフン通り、ナムトゥリエム区、ハノイ",
+      vi: "15 Phạm Hùng, Nam Từ Liêm, Hà Nội",
+    },
+    district: "Nam Từ Liêm",
+    openingHours: { open: "08:00", close: "23:00" },
+    isOpen: true,
+    images: [
+      "https://images.unsplash.com/photo-1498804103079-a6351b050096?w=600",
+    ],
+    menu: [
+      { name: "Espresso", price: 38000 },
+      { name: "Bánh bông lan trứng muối", price: 35000 },
+    ],
+    hashtags: ["wifi", "outlets", "quiet"],
+    averageRating: 4.6,
+    reviewCount: 22,
+    location: { type: "Point" as const, coordinates: [105.7801, 21.0225] },
+  },
+  {
+    name: { ja: "バクトゥリエム・ライブラリー", vi: "Bắc Từ Liêm Library Cafe" },
+    description: {
+      ja: "本に囲まれたアカデミックな雰囲気の静かなカフェ。勉強や執筆に最適です。",
+      vi: "Không gian học thuật yên tĩnh bao quanh bởi sách. Lý tưởng để học tập và viết lách.",
+    },
+    address: {
+      ja: "88 ホンクオックベト通り、バクトゥリエム区、ハノイ",
+      vi: "88 Hoàng Quốc Việt, Bắc Từ Liêm, Hà Nội",
+    },
+    district: "Bắc Từ Liêm",
+    openingHours: { open: "08:00", close: "21:30" },
+    isOpen: true,
+    images: [
+      "https://images.unsplash.com/photo-1481833761820-0509d3217039?w=600",
+    ],
+    menu: [
+      { name: "Trà Ô Long", price: 40000 },
+      { name: "Bánh phô mai", price: 45000 },
+    ],
+    hashtags: ["wifi", "quiet", "japanese"],
+    averageRating: 4.2,
+    reviewCount: 5,
+    location: { type: "Point" as const, coordinates: [105.7885, 21.0475] },
+  },
 ];
