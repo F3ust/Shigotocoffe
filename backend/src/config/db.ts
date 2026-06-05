@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import { config } from "./index";
 
 export async function connectDB(): Promise<void> {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
   try {
     await mongoose.connect(config.mongodbUri, {
       maxPoolSize: 10,
@@ -11,7 +14,7 @@ export async function connectDB(): Promise<void> {
     console.log(`MongoDB connected: ${mongoose.connection.host}`);
   } catch (error) {
     console.error("MongoDB connection failed:", error);
-    process.exit(1);
+    throw error;
   }
 }
 
@@ -22,3 +25,4 @@ mongoose.connection.on("disconnected", () => {
 mongoose.connection.on("error", (err) => {
   console.error("MongoDB error:", err);
 });
+
