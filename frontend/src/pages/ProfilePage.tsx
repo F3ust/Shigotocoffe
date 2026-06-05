@@ -133,9 +133,10 @@ function ProfileCard() {
               <input
                 type="email"
                 required
+                disabled
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-sage-200 px-3 py-2 text-sm outline-none focus:border-sage-500 focus:ring-1 focus:ring-sage-500 transition-all"
+                className="w-full rounded-xl border border-sage-100 bg-gray-100 text-gray-400 px-3 py-2 text-sm cursor-not-allowed outline-none transition-all"
               />
             </div>
             <div className="flex gap-2 pt-1">
@@ -156,12 +157,14 @@ function ProfileCard() {
             </div>
           </form>
         ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white py-2.5 text-sm font-semibold text-sage-700 hover:bg-sage-50 transition-colors shadow-sm"
-          >
-            ✏️ {t("profile.edit")}
-          </button>
+          <div className="flex justify-center mt-3">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white px-6 py-2 text-sm font-semibold text-sage-700 hover:bg-sage-50 transition-colors shadow-sm cursor-pointer"
+            >
+              ✏️ {t("profile.edit")}
+            </button>
+          </div>
         )}
       </div>
     </div>
