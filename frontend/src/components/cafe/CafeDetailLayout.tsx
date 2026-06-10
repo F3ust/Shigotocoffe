@@ -436,7 +436,7 @@ export default function CafeDetailLayout({
                   )}
 
                   {/* Bookmark */}
-                  {!isEditing && (
+                  {!isEditing && currentUser?.role !== "owner" && (
                     <button
                       id={`bookmark-${cafe._id}`}
                       onClick={handleToggleFavorite}
