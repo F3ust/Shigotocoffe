@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Cafe } from "../../types/cafe";
+import { getAuthUser } from "../../services/api";
+
 
 interface CafeCardProps {
   cafe: Cafe;
@@ -47,7 +49,8 @@ export default function CafeCard({ cafe, isFavorite = false, onToggleFavorite }:
           loading="lazy"
         />
         {/* Bookmark icon — heart shape */}
-        <button
+        {getAuthUser()?.role !== "owner" && (
+          <button
           id={`bookmark-${cafe._id}`}
           onClick={(e) => {
             e.preventDefault();
@@ -68,6 +71,7 @@ export default function CafeCard({ cafe, isFavorite = false, onToggleFavorite }:
             <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
           </svg>
         </button>
+        )}
       </div>
 
       {/* Content */}

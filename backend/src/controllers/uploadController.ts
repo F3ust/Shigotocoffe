@@ -19,20 +19,22 @@ try {
 }
 
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, UPLOAD_DIR);
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
+const storage = isVercel
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (_req, _file, cb) => {
+        cb(null, UPLOAD_DIR);
+      },
+      filename: (_req, file, cb) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+      },
+    });
 
 const upload = multer({
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
+    fileSize: isVercel ? 4 * 1024 * 1024 : 5 * 1024 * 1024, // 4MB limit on Vercel, 5MB locally
   },
   fileFilter: (_req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -65,8 +67,15 @@ export async function handleImageUpload(req: Request, res: Response): Promise<vo
         return resolve();
       }
 
-      // Return the public file URL
-      const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      // Return the public file URL or Base64 Data URI
+      let fileUrl = "";
+      if (isVercel) {
+        const base64Data = req.file.buffer.toString("base64");
+        fileUrl = `data:${req.file.mimetype};base64,${base64Data}`;
+      } else {
+        fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      }
+
       res.json({
         status: "success",
         data: {
@@ -77,4 +86,5 @@ export async function handleImageUpload(req: Request, res: Response): Promise<vo
     });
   });
 }
+
 
