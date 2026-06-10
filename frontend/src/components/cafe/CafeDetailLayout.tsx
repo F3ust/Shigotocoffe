@@ -739,12 +739,14 @@ export default function CafeDetailLayout({
           )}
 
           {isOwner && !isEditing && (
-            <button
-              onClick={handleEnterEdit}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white py-3 text-sm font-semibold text-sage-700 shadow-sm hover:bg-sage-50 transition-colors"
-            >
-              ✏️ {t("sprint4.edit_visually")}
-            </button>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleEnterEdit}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-sage-200 bg-white px-6 py-2.5 text-sm font-semibold text-sage-700 shadow-sm hover:bg-sage-50 transition-colors cursor-pointer"
+              >
+                ✏️ {t("sprint4.edit_visually")}
+              </button>
+            </div>
           )}
         </div>
 
