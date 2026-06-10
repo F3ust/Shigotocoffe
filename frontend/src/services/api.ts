@@ -261,9 +261,77 @@ export async function logoutUserToServer(): Promise<void> {
   }
 }
 
+function compressImage(
+  file: File,
+  maxWidth: number = 1200,
+  maxHeight: number = 1200,
+  quality: number = 0.7
+): Promise<File> {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith("image/")) {
+      return resolve(file);
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width > height) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          return resolve(file);
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              return resolve(file);
+            }
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = () => resolve(file);
+    };
+    reader.onerror = () => resolve(file);
+  });
+}
+
 export async function uploadImage(file: File): Promise<{ url: string }> {
+  let fileToUpload = file;
+  try {
+    fileToUpload = await compressImage(file);
+  } catch (err) {
+    console.error("Image compression failed, using original file:", err);
+  }
+
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("image", fileToUpload);
   const { data } = await api.post<{ status: string; data: { url: string } }>("/upload", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
