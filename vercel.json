@@ -23,11 +23,12 @@
       "dest": "/api/index.ts"
     },
     {
-      "handle": "filesystem"
+      "src": "/((?!api|uploads).*\\.[a-zA-Z0-9]+)$",
+      "dest": "/frontend/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "src": "/((?!api|uploads).*)$",
+      "dest": "/frontend/index.html"
     }
   ]
 }
